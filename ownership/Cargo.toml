@@ -1,5 +1,5 @@
 [package]
-name = "how_functions_work"
+name = "ownership"
 version = "0.1.0"
 edition = "2018"
 

@@ -14,9 +14,11 @@
 - 常见编程概念
   - [variables_and_mutability](./variables_and_mutability)
   - [data_types](./data_types)
-  - [how_functions_work](./how_functions_work)
+  - [how_functions_work](./functions)
   - [comments](./comments)
   - [control_flow](./control_flow)
+- 认识所有权
+- [understanding_ownership](./ownership)
 
 ## License
 
