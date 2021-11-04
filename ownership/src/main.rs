@@ -6,6 +6,10 @@
 //! Rust 中的每一个值都有一个称为其所有者(owner)的变量.
 //! 值在任一时刻有且只有一个所有者.
 //! 当所有者(变量)离开作用域, 这个值将被丢弃.
+pub mod return_value;
+pub mod references_and_borrowing;
+pub mod slice;
+
 fn main() {
     // String 有两种方式
     // 一种是这种字面量形式, 它是一种硬编码的形式
@@ -72,11 +76,23 @@ fn main() {
 }
 
 fn foo(name: String) {
-    // str 移出作用域并调用 `drop` 方法. 占用的内存被释放
     println!("{}", name);
-}
+} // name 移出作用域并调用 `drop` 方法. 占用的内存被释放
 
 fn bar(name: &str) {
-    // str 移出作用域并调用 `drop` 方法. 占用的内存被释放
     println!("{}", name);
+    // name 仅仅是移出作用域
 }
+
+// Copy trait
+//
+// 所有整数类型, 比如 u32.
+// 布尔类型, bool, 它的值是 true 和 false.
+// 所有浮点数类型, 比如 f64.
+// 字符类型, char.
+// 元组, 当且仅当其包含的类型也都实现 Copy 的时候. 比如, (i32, i32) 实现了 Copy, 但 (i32, String) 就没有.
+
+// 总结:
+//
+// 变量的所有权总是遵循相同的模式: 将值赋给另一个变量时移动它. 
+// 当持有堆中数据值的变量离开作用域时, 其值将通过 drop 被清理掉, 除非数据被移动为另一个变量所有.
