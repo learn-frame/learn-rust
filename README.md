@@ -18,7 +18,11 @@
   - [comments](./comments)
   - [control_flow](./control_flow)
 - 认识所有权
-- [understanding_ownership](./ownership)
+  - [understanding_ownership](./ownership)
+- 使用结构体来组织相关联的数据
+  - [structs](./structs)
+- 枚举和模式匹配
+  - [enums](./enums)
 
 ## License
 
