@@ -7,7 +7,7 @@
 ## Menu
 
 - 入门指南
-  - [hello_word](./hello_word)
+  - [hello_world](./hello_world)
   - [hello_cargo](./hello_cargo)
 - 猜猜看游戏
   - [guessing_game](./guessing_game)
