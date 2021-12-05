@@ -20,6 +20,11 @@ fn main() {
     // const THREE_HOURS_IN_SECONDS = 60 * 60 * 3;
 
     const BASE_URL: &str = "https://api.yanceyleo.com";
+
+    // 🦀️ shadowing 是可以改变数据类型的
+    // mut 是不可以改变数据类型的, 只能改变值
+    let space = "";
+    let space = 1;
 }
 
 // 总结:

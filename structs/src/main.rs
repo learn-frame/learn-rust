@@ -36,7 +36,8 @@ fn main() {
     println!("black: {:?}", black);
 
     // 没有任何字段的类单元结构体
-    // 如果没有没有任何字段, 它们被称为类单元结构体(unit-like structs), 因为它们类似于 ()
+    // 如果没有没有任何字段, 它们被称为类单元结构体(unit-like structs), 因为它们类似于
+    // 类单元结构体常常在你想要在某个类型上实现 trait 但不需要在类型中存储数据的时候发挥作用, trait 就好比注解吧我猜, TODO: 在第十章学习 trait
     #[derive(Debug)]
     struct AlwaysEqual;
     let subject = AlwaysEqual;
