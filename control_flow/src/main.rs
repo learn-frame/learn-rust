@@ -22,7 +22,7 @@ fn main() {
         }
     };
 
-    // 使用 if 表达式
+    // 使用 if 表达式, 简单说就是把 if/else 的返回值赋值给一个变量
     let condition = true;
     // 5
     let real_num = if condition { 5 } else { 6 };
@@ -116,6 +116,11 @@ fn foo() {
         println!("{}", number);
     }
 
+    // rust 创建范围数组
+    // 想起了 Vue QAQ.
+    // <div>
+    //  <span v-for="n in 10">{{ n }} </span>
+    // </div>
     let arr_1 = 1..=4; // [1, 2, 3, 4]
     let arr_2 = 1..4; // [1, 2, 3]
 }

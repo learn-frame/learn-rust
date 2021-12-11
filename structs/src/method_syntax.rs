@@ -35,3 +35,8 @@ impl Rectangle {
 impl Rectangle {
     fn xxx(&self) {}
 }
+
+fn foo() {
+    let square = Rectangle::square(5);
+    println!("{}", square.area());
+}

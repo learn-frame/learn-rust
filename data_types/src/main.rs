@@ -1,4 +1,6 @@
 // Rust 是静态类型(statically typed)语言, 也就是说在编译时就必须知道所有变量的类型
+use std::num::Wrapping;
+
 fn main() {
     // 当多种类型均有可能时, 必须增加类型注解
     // 必须显式指定变量的数据类型
@@ -35,6 +37,7 @@ fn main() {
     // 整型溢出, 因为 i8 最大到 255
     // 这句话会在编译阶段报错, 但在 release 阶段, 会将 256 变成 0, 257 变成 1, 依此类推. 这叫做二进制补码包装(two's complement wrapping).
     // 标准库中有一个 Wrapping 来显式处理溢出: https://doc.rust-lang.org/std/num/struct.Wrapping.html
+    // 不过 Wrapping 大多都属于实验中的, 留个 TODO: 叭
     // let num: i8 = 256;
 
     // 浮点型
@@ -65,6 +68,7 @@ fn main() {
     let f: bool = false; // 显式指定类型注解
 
     // 字符类型
+    // 字符类型是语言中最原生的字母类型, 它必须是单个字符, 比如 'a', 'b', 但可以是 '𝌆' '😻' 等四字符.
     // 注意要跟字符串区分, 字符类型用的是单引号, 字符串是双引号
     // TODO: 具体区分: https://doc.rust-lang.org/book/ch08-02-strings.html#storing-utf-8-encoded-text-with-strings
     // Rust 的 char 类型的大小为四个字节, 并代表了一个 Unicode 标量值(Unicode Scalar Value)
@@ -106,7 +110,7 @@ fn main() {
     let u = n[0];
     // 👿 编译时是无法检测数组访问元素溢出的, 只有运行时可以
     // let v = n[2];
-    // 数组一旦创建就不可修改长度了, 它没有 push pop 等方法. vector 是有的
+    // 数组一旦创建就不可修改长度了, 它没有 push pop 等方法. 而 vector 是有的
     // 此外和其他数据类型一样默认是不可变的, 除非你加上 mut
     let mut w = [1, 2, 3];
     w[0] = 2;
