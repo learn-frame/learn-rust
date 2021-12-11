@@ -1,5 +1,5 @@
 fn main() {
-    let mut s = String::from("hello world");
+    let mut s = String::from("");
     let word = first_word(&s); // word 的值为 5
     println!("{}", word); // 5
     s.clear();
