@@ -1,6 +1,6 @@
 # Learn Rust
 
-蟹妖, 刚下飞机, 人已生锈.
+蟹妖, 人在美国, 刚下飞机, 已经生锈.
 
 | Rust                                                                        | Ferris                                                            |
 | --------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -32,7 +32,7 @@
   - [enums](./enums/src/main.rs)
   - [match_control_flow_operator](./enums/src/match_control_flow_operator.rs)
 - 使用包, Crate 和模块管理不断增长的项目
-  - [packages_crate_modules](./packages_crate_modules)
+  - [packages_crate_modules](./restaurant)
 
 ## License
 
