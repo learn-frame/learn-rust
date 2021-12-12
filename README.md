@@ -4,6 +4,9 @@
 
 蟹妖, 刚下飞机, 人已生锈.
 
+<img src="./public/assets/rust-logo-blk.svg" alt="rust-logo" height="160"/>
+<img src="./public/assets/ferris.png" alt="ferris" height="160"/>
+
 ## Menu
 
 - 入门指南
@@ -23,6 +26,10 @@
   - [structs](./structs)
 - 枚举和模式匹配
   - [enums](./enums)
+- 枚举和模式匹配
+  - [enums](./enums)
+- 使用包, Crate 和模块管理不断增长的项目
+  - [packages_crate_modules](./packages_crate_modules)
 
 ## License
 
