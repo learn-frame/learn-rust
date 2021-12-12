@@ -47,3 +47,34 @@ fn plus_one(x: Option<i32>) -> Option<i32> {
         Some(i) => Some(i + 1),
     }
 }
+
+// ----- if let -----
+
+// 如果使用 match, 需要把所有的情况都列举处理
+pub fn foo() {
+    let some_u8_value = Some(0u8);
+    match some_u8_value {
+        Some(3) => println!("three"),
+        _ => (),
+    }
+}
+
+// 使用 if let 可以只对某一种处理
+pub fn bar() {
+    let some_u8_value = Some(0u8);
+    if let Some(3) = some_u8_value {
+        println!("three");
+    }
+}
+
+// 枚举也可以使用
+pub fn bars() {
+    let mut count = 0;
+    let coin = Coin::Dime;
+    if let Coin::Quarter(state) = coin {
+        println!("State quarter from {:?}!", state);
+    } else {
+        count += 1;
+        println!("count: {}!", count);
+    }
+}
