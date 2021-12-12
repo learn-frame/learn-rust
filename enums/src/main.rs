@@ -5,6 +5,7 @@ fn main() {
     let ipv6 = IpAddr::V6(String::from("fe80::a8aa:ff:fe10:d81c"));
     println!("ipv4: {:#?}, ipv6: {:#?}", ipv4, ipv6);
 
+    // impl 来为枚举定义方法
     let instance = IpAddr::V6(String::from("fe80::a8aa:ff:fe10:d81c"));
     instance.print_ip();
 }
