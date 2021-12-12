@@ -1,7 +1,5 @@
 # Learn Rust
 
-## Introduction
-
 蟹妖, 刚下飞机, 人已生锈.
 
 | Rust                                                                        | Ferris                                                            |
