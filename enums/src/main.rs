@@ -33,6 +33,8 @@ fn learn_option() {
     // let sum = x + some_number;
 }
 
+// 这种强制分头计算的思路
+// 来限制空值的泛滥以增加 Rust 代码的安全性
 fn plus_one(x: Option<i32>) -> Option<i32> {
     // 你可以通过 match 来分别进行计算
     match x {
