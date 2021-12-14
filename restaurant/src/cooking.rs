@@ -1,4 +1,4 @@
-pub mod cooking {
+pub mod cooking_type {
     pub fn 蒸() {}
 
     pub fn 煮() {}

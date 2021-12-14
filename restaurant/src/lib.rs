@@ -10,29 +10,32 @@
 // 引用 front_of_house 模块
 mod front_of_house;
 
-mod back_of_house;
+mod cooking;
 
 mod use_struct;
 
 // 指定使用 front_of_house 模块中的 hosting 子模块
+// 😈: 一定注意, 虽然 hosting 在 front_of_house 文件中是 pub 的
+// 但如果你在本文件引用时不加 pub, 它意味着在本文件中是私有的
+// pub use 叫做重导出
 pub use crate::front_of_house::hosting;
-
-pub use crate::back_of_house::cooking;
 
 pub use crate::use_struct::back_of_the_house::Breakfast;
 
 pub use crate::use_struct::back_of_the_house::Appetizer;
 
+pub use crate::cooking::cooking_type;
+
 pub fn eat_at_restaurant() {
     // 通过绝对路径引用模块(rust 推荐使用绝对路径来引用)
-    crate::front_of_house::hosting::add_to_waitlist();
+    crate::front_of_house::hosting::hello();
 
     // 通过相对路径引用模块
-    front_of_house::hosting::add_to_waitlist();
+    front_of_house::hosting::hello();
 
     // 通过 use 来引用
-    hosting::add_to_waitlist();
-    cooking::炸();
+    hosting::hello();
+    cooking_type::炸();
 
     let mut instance = Breakfast::summer("Rye");
     instance.toast = String::from("fuck");
@@ -41,3 +44,18 @@ pub fn eat_at_restaurant() {
     let a = Appetizer::Salad;
     let b = Appetizer::Soup;
 }
+
+// 下面两个模块都有 Result, 你不能在一个文件里这样引用
+// 因为重名了, 你可以使用 as 来换个名字, 这点跟 JS 一致
+use std::fmt::Result;
+use std::io::Result as IOResult;
+
+// 如下三个引用
+// use std::cmp::Ordering;
+// use std::io;
+// use std::io::Write;
+// 可以缩成一个
+use std::{self, cmp::Ordering, io::Write};
+
+// 如果希望将一个路径下所有公有项引入作用域, 可以指定路径后跟 *
+use std::collections::*;
