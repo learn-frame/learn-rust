@@ -92,7 +92,7 @@ fn main() {
 // 私以为大多数循环还是 for 循环吧...
 fn foo() {
     let arr = [1, 2, 3, 4, 5];
-    for val in arr {
+    for val in arr.iter() {
         if val % 2 == 0 {
             println!("{}", val);
         }

@@ -114,11 +114,7 @@ fn main() {
     // 此外和其他数据类型一样默认是不可变的, 除非你加上 mut
     let mut w = [1, 2, 3];
     w[0] = 2;
-    // for...in 遍历
-    for val in n {
-        println!("val is: {}", val);
-    }
-    // 迭代
+    // for...in
     for val in n.iter() {
         println!("val is :{}", val);
     }
