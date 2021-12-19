@@ -19,6 +19,7 @@ fn foo(x: i32, y: &str) -> i32 {
 
 fn bar() {
     let x = 5;
+    println!("{}", x);
 
     // 这叫做表达式, 大括号之间形成了作用域
     // x + 1 相当于 return x + 1;
