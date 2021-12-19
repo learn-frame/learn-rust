@@ -34,9 +34,9 @@
 - 使用包, Crate 和模块管理不断增长的项目
   - [packages_crate_modules](./restaurant)
 - 常见集合
-  - [vector](./collections/vector)
-  - [string](./collections/string)
-  - [hashmap](./collections/hashmap)
+  - [vector](./collections/vector.rs)
+  - [string](./collections/string.rs)
+  - [hashmap](./collections/hashmap.rs)
 
 ## License
 
