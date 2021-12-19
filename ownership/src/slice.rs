@@ -1,4 +1,4 @@
-fn main() {
+pub fn bar() {
     let mut s = String::from("");
     let word = first_word(&s); // word 的值为 5
     println!("{}", word); // 5
@@ -6,6 +6,7 @@ fn main() {
     // 即便字符串 s 被置空了, word 依然是 5
     println!("{}", word); // 5
 
+    #[allow(unused)]
     let mut s_1 = String::from("hi yancey");
     let word_1 = first_word_1(&s_1);
     // s_1.clear(); // 当拥有某值的不可变引用时, 就不能再获取一个可变引用
@@ -15,7 +16,7 @@ fn main() {
     foo();
 }
 
-fn first_word(s: &String) -> usize {
+pub fn first_word(s: &String) -> usize {
     let bytes = s.as_bytes();
     // 因为我们从 .iter().enumerate() 中获取了集合元素的引用, 所以模式中使用了 &
     for (i, &item) in bytes.iter().enumerate() {
@@ -27,7 +28,7 @@ fn first_word(s: &String) -> usize {
     return s.len();
 }
 
-fn learn_slice() {
+pub fn learn_slice() {
     let s = String::from("hello world");
 
     let hello = &s[0..5]; // 前闭后开区间
@@ -41,7 +42,7 @@ fn learn_slice() {
     println!("{} {} {} {}", hello, from_zero, util_last, all);
 }
 
-fn first_word_1(s: &String) -> &str {
+pub fn first_word_1(s: &String) -> &str {
     let bytes = s.as_bytes();
 
     for (i, &item) in bytes.iter().enumerate() {
@@ -53,7 +54,7 @@ fn first_word_1(s: &String) -> &str {
     return &s[..];
 }
 
-fn foo() {
+pub fn foo() {
     // 字符串字面量也可以使用 slice
     let str = "yancey";
     println!("{}", &str[..]);

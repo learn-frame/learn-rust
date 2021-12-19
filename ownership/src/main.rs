@@ -6,8 +6,8 @@
 //! Rust 中的每一个值都有一个称为其所有者(owner)的变量.
 //! 值在任一时刻有且只有一个所有者.
 //! 当所有者(变量)离开作用域, 这个值将被丢弃.
-pub mod return_value;
 pub mod references_and_borrowing;
+pub mod return_value;
 pub mod slice;
 
 fn main() {
@@ -39,6 +39,7 @@ fn main() {
     // 这个函数叫做 drop, 在这里 String 的作者可以放置释放内存的代码. Rust 在结尾的 } 处自动调用 drop
     {
         let s = String::from("hello"); // 从此处起, s 是有效的
+        println!("{}", s);
 
         // 使用 s
     } // 此作用域已结束
@@ -57,6 +58,7 @@ fn main() {
     let y_1 = x_1;
     // 👿 报错, 不能访问到 x_1
     // println!("{}", x_1);
+    println!("{}", y_1);
 
     // 如果我们确实要能访问, 可以使用 clone
     let x_3 = String::from("hello");
@@ -94,5 +96,5 @@ fn bar(name: &str) {
 
 // 总结:
 //
-// 变量的所有权总是遵循相同的模式: 将值赋给另一个变量时移动它. 
+// 变量的所有权总是遵循相同的模式: 将值赋给另一个变量时移动它.
 // 当持有堆中数据值的变量离开作用域时, 其值将通过 drop 被清理掉, 除非数据被移动为另一个变量所有.
