@@ -1,6 +1,8 @@
 pub mod back_of_the_house {
     pub struct Breakfast {
-        pub toast: String,      // 公有
+        pub toast: String, // 公有
+
+        #[allow(unused)]
         seasonal_fruit: String, // 私有
     }
 
@@ -17,6 +19,7 @@ pub mod back_of_the_house {
             }
         }
 
+        #[allow(unused)]
         fn winter() {
             println!("winter");
         }

@@ -41,13 +41,19 @@ pub fn eat_at_restaurant() {
     instance.toast = String::from("fuck");
 
     // 只要给枚举加上 pub, 它所有的成员都是 pub 的
+    #[allow(unused)]
     let a = Appetizer::Salad;
+
+    #[allow(unused)]
     let b = Appetizer::Soup;
 }
 
 // 下面两个模块都有 Result, 你不能在一个文件里这样引用
 // 因为重名了, 你可以使用 as 来换个名字, 这点跟 JS 一致
+#[allow(unused)]
 use std::fmt::Result;
+
+#[allow(unused)]
 use std::io::Result as IOResult;
 
 // 如下三个引用
@@ -55,7 +61,9 @@ use std::io::Result as IOResult;
 // use std::io;
 // use std::io::Write;
 // 可以缩成一个
+#[allow(unused)]
 use std::{self, cmp::Ordering, io::Write};
 
 // 如果希望将一个路径下所有公有项引入作用域, 可以指定路径后跟 *
+#[allow(unused)]
 use std::collections::*;
