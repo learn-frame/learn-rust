@@ -1,10 +1,5 @@
 /// match 是 Rust 内置的一个控制流运算符, 它允许我们将一个值与一系列的模式相比较
 /// 并根据相匹配的模式执行相应代码
-///
-fn main() {
-    let x = plus_one(Some(5));
-    let y = plus_one(None);
-}
 
 #[derive(Debug)]
 pub enum UsState {
@@ -22,7 +17,7 @@ pub enum Coin {
 }
 
 // 以硬币为例
-fn value_in_cents(coin: Coin) -> i8 {
+pub fn value_in_cents(coin: Coin) -> i8 {
     match coin {
         Coin::Penny => {
             println!("Lucky penny!");
@@ -41,7 +36,7 @@ fn value_in_cents(coin: Coin) -> i8 {
     }
 }
 
-fn plus_one(x: Option<i32>) -> Option<i32> {
+pub fn plus_one(x: Option<i32>) -> Option<i32> {
     match x {
         None => None,
         Some(i) => Some(i + 1),

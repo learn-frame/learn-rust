@@ -8,6 +8,10 @@ fn main() {
     // impl 来为枚举定义方法
     let instance = IpAddr::V6(String::from("fe80::a8aa:ff:fe10:d81c"));
     instance.print_ip();
+
+    plus_one(Some(1));
+
+    learn_option();
 }
 
 #[derive(Debug)]
@@ -29,6 +33,10 @@ fn learn_option() {
     let some_string = Some("a string");
     let absent_number: Option<i32> = None;
     let x = 1;
+    println!(
+        "{:?} {:?} {:?} {}",
+        some_number, some_string, absent_number, x
+    );
 
     // 😈 下面这个是错的, 简单来说 some_number 是 Option<i32> 类型, 而 x 是 i32 类型, 必然无法加和
     // let sum = x + some_number;
