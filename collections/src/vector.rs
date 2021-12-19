@@ -4,22 +4,25 @@ pub mod iterator;
 struct User {
     name: String,
     age: i32,
+    role: Roles,
 }
 
-enum Audio_Status {
-    PLAYING(String),
-    PAUSING(String),
-    STOPING(String),
+#[derive(Debug)]
+enum Roles {
+    Admin(String),
+    Custom(String),
 }
 
 pub fn learn_vector() {
     let user_1: User = User {
         name: String::from("Yancey Leo"),
         age: 25,
+        role: Roles::Admin(String::from("")),
     };
     let user_2: User = User {
         name: String::from("Sayaka Yamamoto"),
         age: 28,
+        role: Roles::Custom(String::from("")),
     };
 
     println!("{:?}", user_1);

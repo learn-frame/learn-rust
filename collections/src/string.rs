@@ -68,6 +68,7 @@ pub fn update_string() {
 pub fn index_string() {
     let s_1 = "hello world";
     let s_2 = String::from("hello world");
+    println!("{} {}", s_1, s_2);
     // 😈 Rust 的字符串不支持索引
     // println!("s_1[0]: {}", s_1[0]);
     // println!("s_2[0]: {}", s_2[0]);
