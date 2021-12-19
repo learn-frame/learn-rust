@@ -33,6 +33,10 @@
   - [match_control_flow_operator](./enums/src/match_control_flow_operator.rs)
 - 使用包, Crate 和模块管理不断增长的项目
   - [packages_crate_modules](./restaurant)
+- 常见集合
+  - [vector](./collections/vector)
+  - [string](./collections/string)
+  - [hashmap](./collections/hashmap)
 
 ## License
 
