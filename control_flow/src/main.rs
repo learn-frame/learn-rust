@@ -13,7 +13,6 @@ fn main() {
         println!("bingo")
     }
 
-    // TODO: 过多的 if / else 会很蛋疼, 后面会讲到 match
     match number.cmp(&3) {
         Ordering::Less => println!("Too small!"),
         Ordering::Greater => println!("Too big!"),
@@ -123,4 +122,6 @@ fn foo() {
     // </div>
     let arr_1 = 1..=4; // [1, 2, 3, 4]
     let arr_2 = 1..4; // [1, 2, 3]
+
+    println!("{:?} {:?}", arr_1, arr_2);
 }
