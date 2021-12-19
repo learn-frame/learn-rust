@@ -1,6 +1,8 @@
 // Rust 是静态类型(statically typed)语言, 也就是说在编译时就必须知道所有变量的类型
 use std::num::Wrapping;
 
+mod string;
+
 fn main() {
     // 当多种类型均有可能时, 必须增加类型注解
     // 必须显式指定变量的数据类型
@@ -114,12 +116,14 @@ fn main() {
     // 此外和其他数据类型一样默认是不可变的, 除非你加上 mut
     let mut w = [1, 2, 3];
     w[0] = 2;
-    // for...in 遍历
-    for val in n {
-        println!("val is: {}", val);
-    }
-    // 迭代
+    // for...in
     for val in n.iter() {
         println!("val is :{}", val);
     }
+
+    string::learn_string();
+    string::update_string();
+    string::index_string();
+    string::slice_string();
+    string::traverse_string();
 }
