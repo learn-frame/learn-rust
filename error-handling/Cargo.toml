@@ -1,0 +1,14 @@
+[package]
+name = "error-handling"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rand = "0.8.4"
+
+[profile.release]
+# panic 有两种形式, unwinding 和 abort, 默认是 unwinding
+# unwinding 属于 verbose 那种, abort 会让最终二进制文件更小
+# panic = 'abort' | 'unwinding'
