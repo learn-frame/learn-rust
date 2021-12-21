@@ -83,4 +83,17 @@ pub fn learn_vector() {
     v.push(6);
 
     iterator::learn_iterator_of_vector();
+
+    let mut v_2 = vec![1, 2, 3, 4, 5];
+    let top = v_2.pop();
+
+
+    match top {
+        Some(top) => {
+            println!("The top element is: {}", top);
+        }
+        None => {
+            println!("🈳️");
+        }
+    }
 }

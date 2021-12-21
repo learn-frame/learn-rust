@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+<<<<<<< Updated upstream
 use uuid::Uuid;
 
 pub enum Gender {
@@ -143,3 +144,12 @@ pub fn traverse_hashmap() {
 
 // HashMap 默认使用一种 "密码学安全的(cryptographically strong)"哈希函数，它可以抵抗 Dos 攻击
 // 然而这并不是可用的最快的算法, 如果有性能问题, 就换呗...
+=======
+
+pub fn learn_hashmap() {
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50); 
+}
+>>>>>>> Stashed changes
