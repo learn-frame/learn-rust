@@ -35,7 +35,7 @@ pub fn eat_at_restaurant() {
 
     // 通过 use 来引用
     hosting::hello();
-    cooking_type::炸();
+    cooking_type::fry();
 
     let mut instance = Breakfast::summer("Rye");
     instance.toast = String::from("fuck");

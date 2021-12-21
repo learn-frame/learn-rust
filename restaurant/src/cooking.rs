@@ -1,9 +1,9 @@
 pub mod cooking_type {
-    pub fn 蒸() {}
+    pub fn steam() {}
 
-    pub fn 煮() {}
+    pub fn boil() {}
 
-    pub fn 烤() {}
+    pub fn bake() {}
 
-    pub fn 炸() {}
+    pub fn fry() {}
 }
