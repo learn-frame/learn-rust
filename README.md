@@ -32,11 +32,15 @@
   - [enums](./enums/src/main.rs)
   - [match_control_flow_operator](./enums/src/match_control_flow_operator.rs)
 - 使用包, Crate 和模块管理不断增长的项目
-  - [packages_crate_modules](./restaurant)
+  - [lib](./restaurant/src/lib.rs)
+  - [pub_struct](./restaurant/src/use_struct.rs)
 - 常见集合
   - [vector](./collections/src/vector.rs)
   - [string](./collections/src/string.rs)
-  - [hashmap](./collectionssrc/hashmap.rs)
+  - [hashmap](./collections/src/hashmap.rs)
+- 错误处理
+  - [recoverable_errors_with_result](./error_handling/src/recoverable_errors_with_result.rs)
+  - [unrecoverable_errors_with_panic](./error_handling/src/unrecoverable_errors_with_panic.rs)
 
 ## License
 
