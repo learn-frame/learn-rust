@@ -41,6 +41,10 @@
 - 错误处理
   - [recoverable_errors_with_result](./error_handling/src/recoverable_errors_with_result.rs)
   - [unrecoverable_errors_with_panic](./error_handling/src/unrecoverable_errors_with_panic.rs)
+- 泛型, trait 和生命周期
+  - [generics](./generics/src/generics.rs)
+  - [traits](./generics/src/traits.rs)
+  - [lifetimes](./generics/src/lifetimes.rs)
 
 ## License
 
