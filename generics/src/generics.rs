@@ -1,19 +1,19 @@
 pub fn entry() {
-    // let list = vec![3, 0, 6, 1, 4, 5];
-    // println!("The largest element is {}.", get_largest(&list));
+    let list = vec![3, 0, 6, 1, 4, 5];
+    println!("The largest element is {}.", get_largest(&list));
 }
 
-// pub fn get_largest<T>(list: &[T]) -> T {
-//     let mut largest = list[0];
+pub fn get_largest<T: PartialOrd + Copy>(list: &[T]) -> T {
+    let mut largest = list[0];
 
-//     for &item in list.iter() {
-//         if item > largest {
-//             largest = item;
-//         }
-//     }
+    for &item in list.iter() {
+        if item > largest {
+            largest = item;
+        }
+    }
 
-//     largest
-// }
+    largest
+}
 
 // 结构体可以定义泛型
 pub struct Point<T> {
