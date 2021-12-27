@@ -58,6 +58,7 @@ struct Point1<T, U> {
 }
 
 impl<T, U> Point1<T, U> {
+    #[allow(unused)]
     fn mixup<V, W>(self, other: Point1<V, W>) -> Point1<T, W> {
         Point1 {
             x: self.x,
@@ -66,6 +67,7 @@ impl<T, U> Point1<T, U> {
     }
 }
 
+#[allow(unused)]
 fn multi_generics() {
     let p1 = Point1 { x: 5, y: 10.4 };
     let p2 = Point1 { x: "Hello", y: 'c' };
