@@ -79,10 +79,27 @@ pub fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 //     println!("The longest string is {}", result);
 // }
 
-
 // 更蛋疼的是, 这样也是错的
 // 因为返回值不是属于 'a 泛型的, 严谨, 👍
 // fn longest1<'a>(x: &str, y: &str) -> &'a str {
 //     let result = String::from("really long string");
 //     result.as_str()
 // }
+
+// 结构体的生命周期
+// 上回书说道, 我们在结构体中定义字符串的时候, 只用了 String, 而没有使用 &str
+
+pub struct ImportantExcerpt<'a, T> {
+    part: &'a str,
+    age: T,
+}
+
+pub fn foo() {
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split('.').next().expect("Could not find a '.'");
+    let i = ImportantExcerpt {
+        part: first_sentence,
+        age: 18,
+    };
+    println!("{}", i.part);
+}
