@@ -45,6 +45,12 @@
   - [generics](./generics/src/generics.rs)
   - [traits](./generics/src/traits.rs)
   - [lifetimes](./generics/src/lifetimes.rs)
+- 编写自动化测试
+  - [如何编写测试](./writing_automated_tests/src/how_to_write_tests.rs)
+  - [控制测试如何运行](./writing_automated_tests/src/how_to_run_tests.rs)
+  - [测试的组织结构](./writing_automated_tests/src/how_to_organize_tests_files.rs)
+- 一个 I/O 项目：构建一个命令行程序
+  - [项目](./mingrep/src/main.rs)
 
 ## License
 
