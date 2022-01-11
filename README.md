@@ -50,7 +50,11 @@
   - [控制测试如何运行](./writing_automated_tests/src/how_to_run_tests.rs)
   - [测试的组织结构](./writing_automated_tests/src/how_to_organize_tests_files.rs)
 - 一个 I/O 项目：构建一个命令行程序
-  - [项目](./mingrep/src/main.rs)
+  - [main](./mingrep/src/main.rs)
+  - [lib](./mingrep/src/lib.rs)
+- Rust 中的函数式语言功能: 迭代器与闭包
+  - [iterators](./iterators_closures/src/iterators.rs)
+  - [closures](./iterators_closures/src/closures.rs)
 
 ## License
 
