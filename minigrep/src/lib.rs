@@ -1,8 +1,7 @@
 use std::env;
 use std::error::Error;
 use std::fs;
-
-
+use std::ops::RangeBounds;
 
 #[cfg(test)]
 mod tests {
@@ -35,22 +34,30 @@ Trust me.";
     }
 }
 
-pub struct Config<'a> {
-    pub query: &'a str,
-    pub filename: &'a str,
+pub struct Config {
+    pub query: String,
+    pub filename: String,
     pub case_sensitive: bool,
 }
 
-impl<'a> Config<'a> {
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
+impl Config {
+    pub fn new(mut args: env::Args) -> Result<Config, &'static str> {
         if args.len() < 3 {
             return Err("no enough argument!");
         }
 
-        // 小贴士, 遇到所有权的问题, 可以使用 clone() 来生产一个新的值来规避
-        // 但这不优雅, 毕竟老子刚学了生命周期哼
-        let query = &args[1];
-        let filename = &args[2];
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
+
         // 如果没传入 CASE_INSENSITIVE, is_err() 会将它设为 false
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
 
@@ -79,28 +86,17 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn search<'a>(query: &'a str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-
-    results
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &'a str, contents: &'a str) -> Vec<&'a str> {
-    let query = query.to_lowercase();
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.to_lowercase().contains(&query) {
-            results.push(line);
-        }
-    }
-
-    results
+    contents
+        .lines()
+        .filter(|line| line.to_lowercase().contains(&query.to_lowercase()))
+        .collect()
 }
 
 // CASE_INSENSITIVE=1 cargo run to poem.txt
