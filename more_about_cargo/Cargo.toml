@@ -1,0 +1,21 @@
+[package]
+name = "more_about_cargo" # 如果发布到 crates.io 必须保证该名称唯一
+version = "0.1.0"
+edition = "2018"
+authors = ["YanceyOfficial <developer@yanceyleo.com>"]
+description = "A fun game where you guess what number the computer has chosen."
+license = "MIT OR Apache-2.0" # 如果发布到 crates.io 必须指定一个或多个开源协议
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# cargo build 的会编译成 dev 版本的包
+# opt-level 越高, 编译优化率会越高, 但相应的编译速度也会变慢, dev 编译级别默认为 0
+[profile.dev]
+opt-level = 0
+
+# cargo build -- release 的会编译成 release 版本的包
+# opt-level 越高, 编译优化率会越高, 但相应的编译速度也会变慢, release 编译级别默认为 3
+[profile.release]
+opt-level = 3
+
+[dependencies]
