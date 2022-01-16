@@ -1,8 +1,11 @@
 [package]
-name = "adder"
+name = "add_one"
 version = "0.1.0"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# add_one 中引用的三方库只能在 add_one 中使用
+# 不能在其他子项目中使用
+rand = "0.8.4"

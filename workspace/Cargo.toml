@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "adder",
+    "add_one",
+    "add_two",
+]
+
+# 所有 cargo 命令都要在 workspace 目录下执行
+
+# cargo build 可以编译所有的子项目
+# 编译特定的子项目需要指定 -p, --package <SPEC>, 如 cargo run -p adder
+
+# cargo test 可以测试所有的子项目
+# 测试特定的子项目需要指定 -p, --package <SPEC>, 如 cargo test -p adder
+
+# cargo publish
