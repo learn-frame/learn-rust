@@ -14,7 +14,6 @@ impl Rectangle {
     }
 
     // 可以定义一个跟属性同名的方法
-    // TODO: 不过这一般可以用 Getter 和 Setter
     #[allow(unused)]
     pub(crate) fn width(&self) -> bool {
         self.width > 0

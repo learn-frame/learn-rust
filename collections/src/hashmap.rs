@@ -72,7 +72,7 @@ pub fn ownership_of_hashmap() {
 
     // 如果将值的引用插入哈希 map, 这些值本身将不会被移动进哈希 map.
     // 但是这些引用指向的值必须至少在哈希 map 有效时也是有效的
-    // TODO: 第十章会讲到
+    // 这里涉及到生命周期, 生命周期是为了防止悬垂引用
     let mut map2 = HashMap::new();
     map2.insert(field2_name, &field2_value);
     println!("{}", field2_value);

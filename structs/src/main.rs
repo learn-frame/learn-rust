@@ -37,7 +37,7 @@ fn main() {
 
     // 没有任何字段的类单元结构体
     // 如果没有没有任何字段, 它们被称为类单元结构体(unit-like structs), 因为它们类似于
-    // 类单元结构体常常在你想要在某个类型上实现 trait 但不需要在类型中存储数据的时候发挥作用, trait 就好比注解吧我猜, TODO: 在第十章学习 trait
+    // 类单元结构体常常在你想要在某个类型上实现 trait 但不需要在类型中存储数据的时候发挥作用, trait 就好比 interface
     #[derive(Debug)]
     struct AlwaysEqual;
     let subject = AlwaysEqual;
@@ -54,7 +54,7 @@ fn main() {
 // 增加属性来派生 Debug trait, 来打印 struct
 #[derive(Debug)]
 struct User {
-    username: String, // TODO: 至于这里不能用 &str, 放在第十章了
+    username: String, // 这里也可以用 &str, 不过必须要增加 'a 注解, 这涉及到生命周期的概念
     email: String,
     sign_in_count: u64,
     active: bool,

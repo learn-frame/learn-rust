@@ -2,6 +2,7 @@
 //!
 //! `my_crate` is a collection of utilities to make performing certain
 //! calculations more convenient.
+//! 更多关于注释/文档可查看 more_about_cargo 这一章节
 
 /// [某个方法/功能的说明] Adds one to the number given.
 ///
@@ -31,9 +32,6 @@ pub fn add_one(x: i32) -> i32 {
 }
 
 /// [某个方法/功能的说明] Say hello.
-//
 pub fn hello(x: String) -> String {
     format!("Hello, {}!", x)
 }
-
-// TODO: 学 14 章 2 小节时再继续.

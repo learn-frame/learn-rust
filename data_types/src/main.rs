@@ -37,7 +37,7 @@ fn main() {
     // 整型溢出, 因为 i8 最大到 255
     // 这句话会在编译阶段报错, 但在 release 阶段, 会将 256 变成 0, 257 变成 1, 依此类推. 这叫做二进制补码包装(two's complement wrapping).
     // 标准库中有一个 Wrapping 来显式处理溢出: https://doc.rust-lang.org/std/num/struct.Wrapping.html
-    // 不过 Wrapping 大多都属于实验中的, 留个 TODO: 叭
+    // 不过 Wrapping 大多都属于实验中的
     // let num: i8 = 256;
 
     // 浮点型
@@ -72,7 +72,7 @@ fn main() {
     // 字符类型
     // 字符类型是语言中最原生的字母类型, 它必须是单个字符, 比如 'a', 'b', 但可以是 '𝌆' '😻' 等四字符.
     // 注意要跟字符串区分, 字符类型用的是单引号, 字符串是双引号
-    // TODO: 具体区分: https://doc.rust-lang.org/book/ch08-02-strings.html#storing-utf-8-encoded-text-with-strings
+    // 具体区分: https://doc.rust-lang.org/book/ch08-02-strings.html#storing-utf-8-encoded-text-with-strings
     // Rust 的 char 类型的大小为四个字节, 并代表了一个 Unicode 标量值(Unicode Scalar Value)
     let f = 'z';
     let g = 'ℤ';

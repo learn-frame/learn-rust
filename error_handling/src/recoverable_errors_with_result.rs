@@ -53,7 +53,7 @@ pub fn handle_specific_error() {
     };
 }
 
-// 这是一种闭包的实现方式, 更优雅, TODO: 第十三章会讲到
+// 这是一种闭包的实现方式, 更优雅
 pub fn read_file_by_closure() {
     File::open("hello.txt").unwrap_or_else(|error| {
         if error.kind() == ErrorKind::NotFound {
@@ -115,8 +115,8 @@ pub fn simple_propagating_errors() -> Result<String, io::Error> {
 
 // main 函数是特殊的, 其必须返回什么类型是有限制的
 // Box<dyn Error> 被称为 trait 对象(rait objec)
-// TODO: 十七章会解释
 // 目前可以理解 Box<dyn Error> 为使用 ? 时 main 允许返回的任何类型的错误
+// 十七章解释道 Box 用来当有一个在编译时未知大小的类型, 而又想要在需要确切大小的上下文中使用这个类型值的时候
 #[allow(unused)]
 fn main() -> Result<(), Box<dyn Error>> {
     File::open("hello.txt")?;

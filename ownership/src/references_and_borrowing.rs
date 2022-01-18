@@ -29,8 +29,6 @@ pub fn calculate_length_1(s: &String) -> usize {
 } // 这里, s 离开了作用域. 但因为它并不拥有引用值的所有权,
   // 所以什么也不会发生
 
-// TODO: 与 dereferencing 相反的是 dereferencing
-
 // 我们将创建一个引用的行为称为借用(borrowing)
 // 借用默认是不能修改原变量的, 除非你加上 mut
 pub fn main_2() {
