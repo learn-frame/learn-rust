@@ -18,8 +18,16 @@
 
 pub mod box_pointer;
 pub mod deref_trait;
+pub mod drop_trait;
+pub mod rc_pointer;
+pub mod refcell_pointer_and_interior_mutability;
+pub mod reference_cycles;
 
 fn main() {
     box_pointer::entry();
     deref_trait::entry();
+    drop_trait::entry();
+    rc_pointer::entry();
+    refcell_pointer_and_interior_mutability::entry();
+    reference_cycles::entry();
 }
