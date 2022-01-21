@@ -1,19 +1,10 @@
 //! 实现 Deref trait 允许我们重载解引用运算符(dereference operator)
-//! 复习: &str
 
 use std::ops::Deref;
 
 pub fn entry() {
     review_dereference();
-
-    let str = MyBox::new(String::from("hello"));
-    // &MyBox<String> -> &str
-    hello(&str);
-
-    // 如果没有实现 Deref trait, 只能用下面这个
-    // (*m) 将 MyBox<String> 解引用为 String. 接着 & 和 [..] 获取了
-    // 整个 String 的字符串 slice 来匹配 hello 的签名
-    hello(&(*str)[..]);
+    use_hello();
 }
 
 pub fn review_dereference() {
@@ -67,6 +58,20 @@ pub fn custom_dereference() {
 
 fn hello(name: &str) {
     println!("Hello, {}!", name);
+}
+
+fn use_hello() {
+    let str = MyBox::new(String::from("hello"));
+    // 这里涉及函数和方法的隐式 Deref 强制转换
+    // 使用 &m 调用 hello 函数，其为 MyBox<String> 值的引用, 因为 MyBox<T> 上实现了 Deref trait,
+    // Rust 可以通过 deref 调用将 &MyBox<String> 变为 &String, 标准库中提供了 String 上
+    // 的 Deref 实现, 其会返回字符串 slice. 因此 Rust 再次调用 deref 将 &String 变为 &str
+    hello(&str);
+
+    // 如果没有实现 Deref trait, 只能用下面这个
+    // (*m) 将 MyBox<String> 解引用为 String. 接着 & 和 [..] 获取了
+    // 整个 String 的字符串 slice 来匹配 hello 的签名
+    hello(&(*str)[..]);
 }
 
 // 当 T: Deref<Target=U> 时从 &T 到 &U.
