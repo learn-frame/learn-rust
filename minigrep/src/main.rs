@@ -4,7 +4,7 @@
 // 逻辑提取到了 src/lib.rs
 // 并将所有的参数解析和错误处理留在了 src/main.rs 中
 
-// 大部分终端都提供了两种输出: 标准输出(standard output，stdout)对应一般信息,
+// 大部分终端都提供了两种输出: 标准输出(standard output, stdout)对应一般信息,
 // 标准错误(standard error, stderr), 而 println! 只能输出到标准输出
 
 extern crate dotenv;

@@ -141,5 +141,5 @@ pub fn traverse_hashmap() {
     }
 }
 
-// HashMap 默认使用一种 "密码学安全的(cryptographically strong)"哈希函数，它可以抵抗 Dos 攻击
+// HashMap 默认使用一种 "密码学安全的(cryptographically strong)"哈希函数, 它可以抵抗 Dos 攻击
 // 然而这并不是可用的最快的算法, 如果有性能问题, 就换呗...

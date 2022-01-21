@@ -34,7 +34,7 @@ pub fn fibonacci(n: u32) -> u32 {
 /// ![box_pointer_2](https://edge.yancey.app/beg/5i3qqkhx-1642414392475.png)
 #[derive(Debug)]
 #[allow(unused)]
-enum List {
+pub enum List {
     Cons(i32, Box<List>),
     Nil,
 }
