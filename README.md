@@ -69,7 +69,6 @@
   - [threads](./concurrency/src/threads.rs)
   - [message_passing](./concurrency/src/message_passing.rs)
   - [shared_state](./concurrency/src/shared_state.rs)
-  - [extensible_concurrency_with_sync_and_send](./concurrency/src/extensible_concurrency_with_sync_and_send.rs)
 
 ## License
 
