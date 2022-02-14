@@ -87,7 +87,6 @@ pub fn learn_vector() {
     let mut v_2 = vec![1, 2, 3, 4, 5];
     let top = v_2.pop();
 
-
     match top {
         Some(top) => {
             println!("The top element is: {}", top);
@@ -96,4 +95,19 @@ pub fn learn_vector() {
             println!("🈳️");
         }
     }
+
+    // 用枚举来储存多种类型
+    // Vector 默认只能存储一种类型, 你可以用枚举来存储多种类型
+    enum SpreadsheetCell {
+        Int(i32),
+        Float(f64),
+        Text(String),
+    }
+
+    #[allow(unused)]
+    let row = vec![
+        SpreadsheetCell::Int(3),
+        SpreadsheetCell::Text(String::from("blue")),
+        SpreadsheetCell::Float(10.12),
+    ];
 }
