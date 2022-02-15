@@ -1,6 +1,7 @@
 pub mod iterator;
 
 #[derive(Debug)]
+#[allow(unused)]
 struct User {
     name: String,
     age: i32,

@@ -52,6 +52,7 @@ fn main() {
 }
 
 // 增加属性来派生 Debug trait, 来打印 struct
+#[allow(unused)]
 #[derive(Debug)]
 struct User {
     username: String, // 这里也可以用 &str, 不过必须要增加 'a 注解, 这涉及到生命周期的概念

@@ -54,6 +54,7 @@ pub fn use_list() {
 }
 
 // 避免引用循环: 将 Rc<T> 变为 Weak<T>
+#[allow(unused)]
 #[derive(Debug)]
 struct Node {
     value: i32,
