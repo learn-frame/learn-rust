@@ -69,6 +69,13 @@
   - [threads](./concurrency/src/threads.rs)
   - [message_passing](./concurrency/src/message_passing.rs)
   - [shared_state](./concurrency/src/shared_state.rs)
+- Rust 的面向对象编程特性
+  - [main](./oop/src/main.rs)
+  - [design_patterns]('./oop/src/design_patterns.rs')
+- 模式与模式匹配
+  - [all_the_places_for_patterns](./patterns/src/all_the_places_for_patterns.rs)
+  - [refutability](./patterns/src/refutability.rs)
+  - [pattern_grammer](./patterns/src/pattern_grammer.rs)
 
 ## License
 
