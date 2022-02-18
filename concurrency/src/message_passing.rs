@@ -16,7 +16,6 @@ pub fn create_channel<T>() -> (Sender<T>, Receiver<T>) {
     // mpsc 是多个生产者, 单个消费者(multiple producer, single consumer)的缩写
     // Rust 标准库实现通道的方式意味着一个通道可以有多个产生值的 发送(sending)端,
     // 但只能有一个消费这些值的接收(receiving)端. 想象一下多条小河小溪最终汇聚成大河
-    // TODO: 第十八章会讨论 let 语句中的模式和解构`
     let channel = channel();
     channel
 }

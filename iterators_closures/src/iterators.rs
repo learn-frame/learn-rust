@@ -28,7 +28,6 @@ pub fn create_and_consume_iterator() {
 }
 
 // Iterator 有一个 next 方法
-// TODO: 十九章讲: type Item 和 Self::Item, 他们定义了 trait 的关联类型
 // pub trait Iterator {
 //     type Item;
 

@@ -99,7 +99,6 @@ where
 }
 
 // 返回值也可以是 traits
-// TODO: 十七章会讲到如何返回多种类型的 trait
 #[allow(unused)]
 fn returns_summarizable() -> impl Summary {
     Tweet {
