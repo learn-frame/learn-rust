@@ -1,10 +1,37 @@
 # Learn Rust
 
-蟹妖, 刚下飞机, 人已生锈.
+~~蟹妖, 刚下飞机, 人已生锈.~~ Rust 虐我千百遍, 我待 Rust 如初恋.
 
 | Rust                                                                        | Ferris                                                            |
 | --------------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | <img src="./public/assets/rust-logo-blk.svg" alt="rust-logo" height="160"/> | <img src="./public/assets/ferris.png" alt="ferris" height="160"/> |
+
+## 内存安全
+
+只有当程序访问未定义内存的时候才会产生内存错误. 一般来说, 发生以下几种情况就会产生内存错误:
+
+- 引用空指针
+- 使用未初始化内存
+- 释放后使用, 也就是使用悬垂指针
+- 缓冲区滥出, 比如数组越界.
+- 非法释放已经释放过的指针或未分配的指针, 也就是重复释放.
+
+这些情况之所以会产生内存错误, 是因为它们都访问了未定义内存. 为了保证内存安全, Rust语言建立了严格的安全内存管理模型:
+
+- **所有权系统**: 每个被分配的内存都有一个独占其所有权的指针. 只有当该指针被销毁时, 其对应的内存才能随之被释放.
+- **借用和生命周期**: 每个变量都有其生命周期, 一旦超出生命周期, 变量就会被自动释放. 如果是借用, 则可以通过标记生命周期参数供编译器检查的方式, 防止出现悬垂指针, 也就是释放后使用的情况.
+
+## Rust 编译概览
+
+Rust是跨平台语言, 一次编译, 到处运行, 这得益于 LLVM. Rust 编译器是一个 LLVM 编译前端, 它将代码编译为 LLVM IR, 然后经过 LLVM 编译为相应的平台目标.
+
+Rust 源码经过分词和解析, 生成 AST.  然后把 AST 进一步简化处理为 HIR (High-level IR), 目的是让编译器更方便地做类型检查.  HIR 会进一步被编译为 MIR (Middle IR), 这是一种中间表示, 它在 Rust 1.12 版本中被引入, 主要用于以下目的:
+
+- 缩短编译时间. MIR 可以帮助实现增量编译, 当你修改完代码重新编译的时候, 编译器只 算更改过的部分, 从而缩短了编译时间.
+- 缩短执行时间. MIR 可以在 LLVM 编译之前实现更细粒度的优化, 因为单纯依赖 LLVM 的优化粒度太粗, 而且 Rust 无法控制, 引入 MIR 就增加了更多的优化空间.
+- 更精确的类型检查. MIR 将帮助实现更灵活的借用检查, 从而可以提升 Rust 的使用体验.
+
+最终, MIR 会被翻译为 LLVM IR,  然后被 LLVM 的处理编译为能在各个平台上运行的目标机器码.
 
 ## Menu
 
@@ -42,9 +69,9 @@
   - [recoverable_errors_with_result](./error_handling/src/recoverable_errors_with_result.rs)
   - [unrecoverable_errors_with_panic](./error_handling/src/unrecoverable_errors_with_panic.rs)
 - 泛型, trait 和生命周期
-  - [generics](./generics/src/generics.rs)
-  - [traits](./generics/src/traits.rs)
-  - [lifetimes](./generics/src/lifetimes.rs)
+  - [generics](./generics_traits_lifetimes/src/generics.rs)
+  - [traits](./generics_traits_lifetimes/src/traits.rs)
+  - [lifetimes](./generics_traits_lifetimes/src/lifetimes.rs)
 - 编写自动化测试
   - [how_to_write_tests](./writing_automated_tests/src/how_to_write_tests.rs)
   - [how_to_run_tests](./writing_automated_tests/src/how_to_run_tests.rs)

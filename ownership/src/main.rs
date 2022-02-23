@@ -86,6 +86,12 @@ fn bar(name: &str) {
     // name 仅仅是移出作用域
 }
 
+pub fn func() {
+    let str = String::from("ccc");
+    // {:?} 用来获取引用的指针, 如果不是引用, 在编译时不会报错, 在运行时会报错
+    println!("{:p}", &str); 
+}
+
 // Copy trait
 //
 // 所有整数类型, 比如 u32.
