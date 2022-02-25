@@ -1,0 +1,15 @@
+{
+    "total": 100,
+    "page": 1,
+    "page_size": 10,
+    "posts": [
+        {
+            "id": "1",
+            "title": "post 1"
+        },
+        {
+            "id": "2",
+            "title": "post 2"
+        }
+    ]
+}

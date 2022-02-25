@@ -77,8 +77,8 @@ Rust 源码经过分词和解析, 生成 AST.  然后把 AST 进一步简化处�
   - [how_to_run_tests](./writing_automated_tests/src/how_to_run_tests.rs)
   - [how_to_organize_tests_files](./writing_automated_tests/src/how_to_organize_tests_files.rs)
 - 一个 I/O 项目：构建一个命令行程序
-  - [main](./mingrep/src/main.rs)
-  - [lib](./mingrep/src/lib.rs)
+  - [main](./minigrep/src/main.rs)
+  - [lib](./minigrep/src/lib.rs)
 - Rust 中的函数式语言功能: 迭代器与闭包
   - [iterators](./iterators_closures/src/iterators.rs)
   - [closures](./iterators_closures/src/closures.rs)
@@ -103,6 +103,15 @@ Rust 源码经过分词和解析, 生成 AST.  然后把 AST 进一步简化处�
   - [all_the_places_for_patterns](./patterns/src/all_the_places_for_patterns.rs)
   - [refutability](./patterns/src/refutability.rs)
   - [pattern_grammer](./patterns/src/pattern_grammer.rs)
+- 高级特性
+  - [unsafe_rust](./advanced_features/src/unsafe_rust.rs)
+  - [advanced_traits](./advanced_features/src/advanced_traits.rs)
+  - [advanced_types](./advanced_features/src/advanced_types.rs)
+  - [advanced_functions_and_closures](./advanced_features/src/advanced_functions_and_closures.rs)
+  - [macros](./advanced_features/src/macros.rs)
+- 带线程池的 Web Server
+  - [main](./web_server/src/main.rs)
+  - [lib](./web_server/src/lib.rs)
 
 ## License
 
