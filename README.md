@@ -33,6 +33,12 @@ Rust 源码经过分词和解析, 生成 AST.  然后把 AST 进一步简化处�
 
 最终, MIR 会被翻译为 LLVM IR,  然后被 LLVM 的处理编译为能在各个平台上运行的目标机器码.
 
+## Available Scripts
+
+- `cargo fmt`: 自动格式化
+- `cargo fix`: 自动修复代码
+- `cargo clippy`: 更严格的 lint
+
 ## Menu
 
 - 入门指南

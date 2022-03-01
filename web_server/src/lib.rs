@@ -9,7 +9,12 @@ pub struct PoolCreationError {
 
 pub struct ThreadPool {
     workers: Vec<Worker>,
-    sender: mpsc::Sender<Job>,
+    sender: mpsc::Sender<Message>,
+}
+
+pub enum Message {
+    NewJob(Job),
+    Terminate,
 }
 
 // Job 将是一个有着 execute 接收到的闭包类型的 trait 对象的类型别名
@@ -17,7 +22,7 @@ type Job = Box<dyn FnOnce() + Send + 'static>;
 
 pub struct Worker {
     id: usize,
-    thread: thread::JoinHandle<()>,
+    thread: Option<thread::JoinHandle<()>>,
 }
 
 impl ThreadPool {
@@ -57,31 +62,66 @@ impl ThreadPool {
         F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
-        self.sender.send(job).unwrap();
+
+        self.sender.send(Message::NewJob(job)).unwrap();
     }
 }
 
 impl Worker {
-    pub fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
+    pub fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Message>>>) -> Worker {
         let thread = thread::spawn(move || loop {
-            let job = receiver.lock().unwrap().recv().unwrap();
+            let message = receiver.lock().unwrap().recv().unwrap();
 
-            println!("Worker {} got a job; executing.", id);
+            match message {
+                Message::NewJob(job) => {
+                    println!("Worker {} got a job; executing.", id);
 
-            job();
+                    job();
+                }
+                Message::Terminate => {
+                    println!("Worker {} was told to terminate.", id);
+
+                    break;
+                }
+            }
         });
-        Worker { id, thread }
+        Worker {
+            id,
+            thread: Some(thread),
+        }
     }
 }
 
 impl Drop for ThreadPool {
     // 当线程池被丢弃时, 应该 join 所有线程以确保他们完成其操作
     fn drop(&mut self) {
+        println!("Sending terminate message to all workers.");
+
+        for _ in &self.workers {
+            self.sender.send(Message::Terminate).unwrap();
+        }
+
+        println!("Shutting down all workers.");
+
         for worker in &mut self.workers {
             println!("Shutting down worker {}", worker.id);
 
             // 我们不能调用 join, 因为每个 worker 只有一个可变借用, 而 join 会获取它所有的参数的所有权
-            worker.thread.join().unwrap();
+            // 因此需要将 thread 移动出拥有其所有权的 Worker 实例以便 join 可以消费这个线程
+            // worker.thread.join().unwrap();
+
+            // 可以将 thread 变成可选的
+            // 如果 worker 的线程已然是 None, 就知道此时这个 worker 已经清理了其线程所以无需做任何操作
+            if let Some(thread) = worker.thread.take() {
+                thread.join().unwrap();
+            }
         }
     }
 }
+
+// TODO:
+// 为 ThreadPool 和其公有方法增加更多文档
+// 为库的功能增加测试
+// 将 unwrap 调用改为更健壮的错误处理
+// 使用 ThreadPool 进行其他不同于处理网络请求的任务
+// 在 crates.io 上寻找一个线程池 crate 并使用它实现一个类似的 web server, 将其 API 和鲁棒性与我们的实现做对比

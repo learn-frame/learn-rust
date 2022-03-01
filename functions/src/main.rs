@@ -44,5 +44,12 @@ fn plus_one() -> i32 {
 //     return x + 1;
 // }
 
+// 理论上你不能用关键字来当作变量名, 除非你使用原始标识符(Raw identifiers)
+pub fn r#match(needle: &str, haystack: &str) -> bool {
+    let r#let = 1;
+    println!("{}", r#let);
+    haystack.contains(needle)
+}
+
 // Rust 编译器在解析代码的时候, 如果碰到分号, 就会继续往后面执行; 如果碰到语旬, 则执行语句; 如果碰到表达式, 则会会对表达式求值, 如果分号后面什么都没有, 就会补上单元值 ()
 // 当遇到函数的时候, 会将函数体的花括号识别为块表达式(Block Expression). 块表达式是由一对花括号和一系列表达式组成的, 它总是返回块中最后一个表达式的值.
