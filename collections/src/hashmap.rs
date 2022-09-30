@@ -30,7 +30,7 @@ pub fn learn_hashmap() {
 pub fn create_hashmap_by_class() {
     let mut users: HashMap<String, User> = HashMap::new();
 
-    let user1_id = Uuid::new_v4().to_hyphenated().to_string();
+    let user1_id = Uuid::new_v4().to_string();
     let user1_msg = User {
         name: String::from("Yancey Leo"),
         age: 18,
@@ -38,7 +38,7 @@ pub fn create_hashmap_by_class() {
         address: String::new(),
     };
 
-    let user2_id = Uuid::new_v4().to_hyphenated().to_string();
+    let user2_id = Uuid::new_v4().to_string();
     let user2_msg = User {
         name: String::from("Sayaka Yamamoto"),
         age: 18,
