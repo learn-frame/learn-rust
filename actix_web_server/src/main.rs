@@ -2,8 +2,11 @@ use std::thread;
 use std::time::Duration;
 
 use actix_cors::Cors;
-use actix_web::{http::header, middleware, web, App, HttpResponse, HttpServer};
+use actix_web::{
+    get, http::header, middleware, post, web, App, HttpResponse, HttpServer, Responder,
+};
 use fake::{
+    faker::boolean::en::Boolean,
     faker::internet::en::{SafeEmail, Username},
     faker::lorem::en::Paragraph,
     faker::name::en::Name,
@@ -25,6 +28,12 @@ struct User {
     follow_count: i32,
 }
 
+#[derive(Serialize, Deserialize)]
+struct Like {
+    like_count: i32,
+    has_liked: bool,
+}
+
 fn generate_user() -> User {
     User {
         user_id: UUIDv4.fake(),
@@ -42,18 +51,16 @@ fn generate_user() -> User {
     }
 }
 
-/// This handler uses json extractor
-async fn get_user() -> HttpResponse {
+#[get("/user")]
+async fn get_user() -> impl Responder {
     thread::sleep(Duration::from_millis(1000));
 
     let user = generate_user();
-
-    let res = web::Json(user);
-
-    HttpResponse::Ok().json(res)
+    HttpResponse::Ok().json(user)
 }
 
-async fn get_users() -> HttpResponse {
+#[get("/users")]
+async fn get_users() -> impl Responder {
     thread::sleep(Duration::from_millis(1000));
     let rand_num = rand::thread_rng().gen_range(2..10);
     let mut users: Vec<User> = vec![];
@@ -62,9 +69,41 @@ async fn get_users() -> HttpResponse {
         users.push(generate_user());
     }
 
-    let res = web::Json(users);
+    HttpResponse::Ok().json(users)
+}
 
-    HttpResponse::Ok().json(res)
+#[post("/user")]
+async fn create_user() -> impl Responder {
+    thread::sleep(Duration::from_millis(1000));
+
+    let user = generate_user();
+    HttpResponse::Ok().json(user)
+}
+
+#[get("/like")]
+async fn get_like() -> impl Responder {
+    thread::sleep(Duration::from_millis(1000));
+
+    HttpResponse::Ok().json(Like {
+        like_count: rand::thread_rng().gen_range(100..200),
+        has_liked: Boolean(1).fake(),
+    })
+}
+
+#[post("/like")]
+async fn handle_like(req: web::Json<Like>) -> impl Responder {
+    println!("has_liked: {}", req.has_liked);
+    thread::sleep(Duration::from_millis(1000));
+
+    let like_count = match req.has_liked {
+        true => req.like_count - 1, // ✅
+        false => req.like_count + 1,
+    };
+
+    HttpResponse::Ok().json(Like {
+        like_count,
+        has_liked: !req.has_liked,
+    })
 }
 
 #[actix_web::main]
@@ -86,8 +125,11 @@ async fn main() -> std::io::Result<()> {
             )
             .wrap(middleware::Logger::default())
             .app_data(web::JsonConfig::default().limit(4096))
-            .service(web::resource("/user").route(web::get().to(get_user)))
-            .service(web::resource("/users").route(web::get().to(get_users)))
+            .service(get_user)
+            .service(get_users)
+            .service(create_user)
+            .service(get_like)
+            .service(handle_like)
     })
     .bind(("127.0.0.1", 3002))?
     .run()
