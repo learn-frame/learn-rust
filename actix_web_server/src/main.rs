@@ -62,6 +62,7 @@ async fn get_user() -> impl Responder {
 #[get("/users")]
 async fn get_users() -> impl Responder {
     thread::sleep(Duration::from_millis(1000));
+
     let rand_num = rand::thread_rng().gen_range(2..10);
     let mut users: Vec<User> = vec![];
 
@@ -92,7 +93,6 @@ async fn get_like() -> impl Responder {
 
 #[post("/like")]
 async fn handle_like(req: web::Json<Like>) -> impl Responder {
-    println!("has_liked: {}", req.has_liked);
     thread::sleep(Duration::from_millis(1000));
 
     let like_count = match req.has_liked {
