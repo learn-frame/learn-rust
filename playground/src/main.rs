@@ -1,4 +1,7 @@
 fn main() {
-    let str = String::from("ccc");
-    println!("{:p}", &str);
+    let a = "xx";
+    println!("{}", a);
+
+    let a = 1;
+    println!("{}", a);
 }

@@ -1,7 +1,7 @@
 [package]
 name = "more_about_cargo" # 如果发布到 crates.io 必须保证该名称唯一
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
 authors = ["YanceyOfficial <developer@yanceyleo.com>"]
 description = "A fun game where you guess what number the computer has chosen."
 license = "MIT OR Apache-2.0" # 如果发布到 crates.io 必须指定一个或多个开源协议

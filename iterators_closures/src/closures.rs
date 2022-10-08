@@ -21,6 +21,15 @@ pub fn entry() {
     generate_workout(14, 4);
 
     capturing_the_environment_with_closures();
+
+    let vec = vec![1, 2, 3];
+    println!("my_map: {:?}", my_map(&vec, cb));
+    println!(
+        "my_map_2: {:?}",
+        my_map_2(&vec, |_, val, _| val.to_string() + ". hello")
+    );
+
+    use_move_2()(4);
 }
 
 #[allow(unused)]
@@ -167,4 +176,41 @@ fn use_move() {
     let y = vec![1, 2, 3];
 
     assert!(equal_to_x(y));
+}
+
+// 这里返回了一个闭包, 由于闭包使用了变量 i
+// 而在函数调用完毕后, i 就销毁了
+// 那么随闭包返回的变量 i 的引用, 也将成为悬垂指针
+// 因此你必须使用 move 将 i 的所有权转移到闭包中
+fn use_move_2() -> impl Fn(i32) -> i32 {
+    let i = 1;
+    move |j| j + i
+}
+
+fn my_map<T, S>(vec: &Vec<T>, func: fn(idx: usize, val: &T, vec: &Vec<T>) -> S) -> Vec<S> {
+    let mut new_vec = Vec::new();
+
+    for (idx, val) in vec.iter().enumerate() {
+        let res = func(idx, val, &vec);
+        new_vec.push(res);
+    }
+
+    new_vec
+}
+
+fn cb(_: usize, val: &i32, _: &Vec<i32>) -> i32 {
+    let mut curr_val = *val;
+    curr_val *= 2;
+    curr_val
+}
+
+fn my_map_2<T, S, F: Fn(usize, &T, &Vec<T>) -> S>(vec: &Vec<T>, f: F) -> Vec<S> {
+    let mut new_vec = Vec::new();
+
+    for (idx, val) in vec.iter().enumerate() {
+        let res = f(idx, val, vec);
+        new_vec.push(res);
+    }
+
+    new_vec
 }

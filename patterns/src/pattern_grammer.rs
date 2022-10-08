@@ -15,16 +15,19 @@ pub fn entry() {
     match_guard();
     match_guard_resolve_covered_variable();
     at_operator_binding();
+    while_let();
 }
 
 // 匹配字面量
 fn match_literals() {
-    let x = 1;
+    let x = 9;
 
     match x {
-        1 => println!("one"), // one
-        2 => println!("two"),
-        3 => println!("three"),
+        1..=3 => println!("in 1 - 3"),
+        6 => println!("6"),
+        5 | 7 | 9 => println!("could be 5, 7, 9"),
+        // @ 符号把 23 赋值给 n, 使用操作符 @ 可以将模式中的值绑定给一个变量, 供分支右侧的代码使用, 这类匹配叫绑定模式(Binding Mode).
+        n @ 23 => println!("{}", n),
         _ => println!("anything"),
     }
 }
@@ -199,6 +202,7 @@ fn bar() {
     let b = Some(String::from("Hello!"));
     let c = Some(String::from("Hello!"));
 
+    // if let 可以代替冗长的 match
     if let Some(_s) = a {
         println!("found a string");
     }
@@ -217,6 +221,29 @@ fn bar() {
         println!("found a string");
     }
     println!("{:?}", c);
+}
+
+fn while_let() {
+    let mut v: Vec<i32> = (0..10).collect();
+
+    // while let 循环
+    while let Some(x) = v.pop() {
+        println!("{}", x);
+    }
+
+    // 不用 while let
+    while v.len() != 0 {
+        let x = v.pop();
+        println!("{:?}", x);
+    }
+
+    // 用 loop 的方式
+    loop {
+        match v.pop() {
+            Some(x) => println!("{:?}", x),
+            None => break,
+        }
+    }
 }
 
 fn double_dot_ignore() {
