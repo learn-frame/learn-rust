@@ -43,7 +43,7 @@ fn main() {
             // 当然后面正经代码应该使用诸如 try...catch 来处理
             .expect("Failed to read line");
 
-        // 和 JavaScript 不同, rust 中的 let 变量允许用一个新值来隐藏(shadow) guess 之前的值
+        // 和 JavaScript 不同, rust 中的 let 变量允许用一个新值来隐藏(shadow) guess 之前的值, 这叫做变量遮蔽(variable shadow)
         // 因为生成的 secret_number 是个数字, 所以你需要将数字字符串转一下
         // 为了避免错误直接退出程序, 出错时继续程序.
         let guess: u32 = match guess.trim().parse() {

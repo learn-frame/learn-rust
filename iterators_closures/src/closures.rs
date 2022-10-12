@@ -26,7 +26,7 @@ pub fn entry() {
     println!("my_map: {:?}", my_map(&vec, cb));
     println!(
         "my_map_2: {:?}",
-        my_map_2(&vec, |_, val, _| val.to_string() + ". hello")
+        my_map_2(&vec, |idx, val, _| format!("{} -> {}", idx, val))
     );
 
     use_move_2()(4);

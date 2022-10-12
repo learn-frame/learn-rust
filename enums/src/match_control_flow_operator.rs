@@ -73,3 +73,27 @@ pub fn bars() {
         println!("count: {}!", count);
     }
 }
+
+// ----- while let -----
+pub fn while_let() {
+    let mut v: Vec<i32> = (0..10).collect();
+
+    // while let 循环
+    while let Some(x) = v.pop() {
+        println!("{}", x);
+    }
+
+    // 不用 while let
+    while v.len() != 0 {
+        let x = v.pop();
+        println!("{:?}", x);
+    }
+
+    // 用 loop 的方式
+    loop {
+        match v.pop() {
+            Some(x) => println!("{:?}", x),
+            None => break,
+        }
+    }
+}

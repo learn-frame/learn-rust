@@ -1,6 +1,11 @@
 // Rust 是静态类型(statically typed)语言, 也就是说在编译时就必须知道所有变量的类型
 // use std::num::Wrapping;
 
+use std::{
+    f32::{INFINITY, NEG_INFINITY},
+    i32::{MAX, MIN},
+};
+
 fn main() {
     // 当多种类型均有可能时, 必须增加类型注解
     // 必须显式指定变量的数据类型
@@ -55,11 +60,16 @@ fn main() {
     let d: i32 = 4;
     let e: f64 = 2.0;
     let f = 4u32; // 可以通过直接使用类型后缀来告知编译器这个整型数字是个 u32 的, 否则默认被推算成 i32
+    let g = MAX;
+    let i = MIN;
+    let j = INFINITY;
+    let k = NEG_INFINITY;
     assert_eq!(b'A', 65u8); // 二进制可以用 b 前缀
 
     // 👿 必须是相同类型才能做加减乘除取余
     println!("{}", a + b);
     println!("{} {} {} {}", c, d, e, f);
+    println!("{} {} {} {}", g, i, j, k);
 
     // 👿 i8 和 i32 无法进行运算
     // println!("{}", a + d);
@@ -75,6 +85,7 @@ fn main() {
     println!("{} {} {} {}", t, f, truely, falsy);
 
     // 字符类型
+    // 字符类型代表的是一个 Unicode 标量值.
     // 字符类型是语言中最原生的字母类型, 它必须是单个字符, 比如 'a', 'b', 但可以是 '𝌆' '😻' 等四字符.
     // 注意要跟字符串区分, 字符类型用的是单引号, 字符串是双引号
     // 具体区分: https://doc.rust-lang.org/book/ch08-02-strings.html#storing-utf-8-encoded-text-with-strings
@@ -82,7 +93,14 @@ fn main() {
     let f = 'z';
     let g = 'ℤ';
     let h = '😻';
-    println!("{} {} {}", f, g, h);
+    let i = '\x2A';
+    let j = '\u{CA0}';
+
+    // 使用 as 操作符将字符转为数字类型, 比如 % 的十进制 ASCII 是 37, 那结果就是 37
+    // ಠ 是 3232, 如果强制转 i8 的话, 高位会被截取, 变成 -96
+    let k = '%' as i8; // 37
+    let l = 'ಠ' as i8; // 96
+    println!("{} {} {} {} {} {} {}", f, g, h, i, j, k, l);
 
     //: 复合类型
     //: Rust 有两种基本的复合类型: 元组, 数组
@@ -105,30 +123,36 @@ fn main() {
     let l = ();
     println!("{:?}", l);
 
-    // 数组
-    // 必须是一致的类型
+    // 数组 [T; N], 必须是一致的类型, 且长度必须为编译时常量, 默认不可变
+
+    // 👿 必须是一致的类型
     // let m = [1, 2, 3, 4, 5, ""];
-    // 对于长度固定的, 用数组比较好, 可变的建议用 vector
-    let n = ["Yancey", "Sayaka"];
-    let o = vec![1, 2, 3];
-    println!("{:?}", o);
-    // 这个就比较骚, 等价于 [3, 3, 3, 3, 3]
-    let p = [3; 5];
-    println!("{:?}", p);
-    // 我爆哭 qwq, 用 js 刷动态规划的 leetcode 题, 初始化二维数组贼麻烦.
-    let q = [[""; 5]; 5];
-    // 对于数组的打印, 和元组类似, 都得用 {:?}
-    println!("{:?}", q);
-    let u = n[0];
-    println!("{:?}", u);
-    // 👿 编译时是无法检测数组访问元素溢出的, 只有运行时可以
-    // let v = n[2];
-    // 数组一旦创建就不可修改长度了, 它没有 push pop 等方法. 而 vector 是有的
-    // 此外和其他数据类型一样默认是不可变的, 除非你加上 mut
-    let mut w = [1, 2, 3];
-    w[0] = 2;
+    let mut n = ["Yancey", "Sayaka"];
+
+    // 数组一旦创建就不可修改长度了, 它没有 push pop 等方法
+    // 此外和其他数据类型一样默认是不可变的, 除非你加上 mut, 但即便加上了 mut, 也只能修改己存在于索号位上的元素
+    n[1] = "Yancey"; // 可以
+    // n[5] = "hello"; // 👿 运行时出错, 编译时是无法检测数组访问元素溢出的
+
     // for...in
     for val in n.iter() {
         println!("val is :{}", val);
     }
+
+    // 对于长度固定的, 用数组比较好, 可变的建议用 vector
+    let o = vec![1, 2, 3];
+    println!("{:?}", o);
+    // println!("{:?}", o[4]);  // 👿 也运行时出错, 编译时是无法检测数组访问元素溢出的
+
+    // 这个就比较骚, 等价于 [3, 3, 3, 3, 3]
+    let p = [3; 5];
+    println!("{:?}", p);
+
+    // 我爆哭 qwq, 用 js 刷动态规划的 leetcode 题, 初始化二维数组贼麻烦.
+    let q = [[""; 5]; 5];
+
+    // 对于数组的打印, 和元组类似, 都得用 {:?}
+    println!("{:?}", q);
+    let u = n[0];
+    println!("{:?}", u);
 }
