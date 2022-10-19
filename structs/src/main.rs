@@ -1,6 +1,19 @@
 pub mod method_syntax;
 
 fn main() {
+    #[derive(Debug)]
+    struct User {
+        #[allow(unused)]
+        username: String, // 这里也可以用 &str, 不过必须要增加 'a 注解, 这涉及到生命周期的概念
+        #[allow(unused)]
+        email: String,
+        #[allow(unused)]
+        sign_in_count: u64,
+        active: bool,
+        #[allow(unused)]
+        hobby: Vec<i32>,
+    }
+
     let mut user1 = User {
         username: String::from("Yancey Leo"),
         email: String::from("yanceyofficial@gmail.com"),
@@ -20,28 +33,35 @@ fn main() {
     };
 
     // println!("user2: {:#?}", user2);
-    // 除了使用 println 的方式, 还可以用 dbg!
+    // 除了使用 println! 的方式, 还可以用 dbg!
     // 但要注意的是, 两者都必须在 structs 上加上 trait #[derive(Debug)]
     dbg!(&user2);
 
-    foo(
-        String::from("Sayaka Yamamoto"),
-        String::from("developer@yanceyleo.com"),
-    );
-
     // 元组结构体
+    // 特点是字段只有类型没有名称
     #[derive(Debug)]
     struct Color(i32, i32, i32);
     let black = Color(0, 0, 0);
-    println!("black: {:?}", black);
+    println!("{} {} {}", black.0, black.1, black.2);
+
+    // 当元组结构体只有一个元素时称为 New Type 模式
+    struct Interger(u32);
+    // 也可以使用 type 关键字为一个类型创建别名
+    type Int = u32;
+    let interger = Interger(10);
+    let int: Int = 10;
+    assert_eq!(interger.0, 10);
+    assert_eq!(int, 10);
 
     // 没有任何字段的类单元结构体
     // 如果没有没有任何字段, 它们被称为类单元结构体(unit-like structs), 因为它们类似于
-    // 类单元结构体常常在你想要在某个类型上实现 trait 但不需要在类型中存储数据的时候发挥作用, trait 就好比 interface
+    // 类单元结构体常常在你想要在某个类型上实现 trait 但不需要在类型中存储数据的时候发挥作用
     #[derive(Debug)]
     struct AlwaysEqual;
     let subject = AlwaysEqual;
     println!("subject: {:?}", subject);
+    // 比如标准库的 RangeFull 就是单元结构体
+    assert_eq!((..), std::ops::RangeFull);
 
     let instance = method_syntax::Rectangle {
         width: 30,
@@ -49,25 +69,4 @@ fn main() {
     };
 
     dbg!(instance.area());
-}
-
-// 增加属性来派生 Debug trait, 来打印 struct
-#[allow(unused)]
-#[derive(Debug)]
-struct User {
-    username: String, // 这里也可以用 &str, 不过必须要增加 'a 注解, 这涉及到生命周期的概念
-    email: String,
-    sign_in_count: u64,
-    active: bool,
-    hobby: Vec<i32>,
-}
-
-fn foo(username: String, email: String) -> User {
-    User {
-        username, // 和 ES6 一样, 变量与字段同名时可简化 username: username 的写法
-        email,
-        sign_in_count: 1,
-        active: true,
-        hobby: [1, 2, 3].to_vec(),
-    }
 }

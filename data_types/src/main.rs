@@ -13,8 +13,8 @@ fn main() {
     let number_from_string: u32 = "42".parse().expect("必须是个数字字符串啊喂");
     println!("{}", number_from_string);
 
-    //: 标量类型
-    //: Rust 有四种基本的标量类型: 整型, 浮点型, 布尔类型和字符类型(characters)
+    // 标量类型
+    // Rust 有四种基本的标量类型: 整型, 浮点型, 布尔类型和字符类型(characters)
 
     // 整型
     // Length	 Signed	                                    Unsigned                                备注
@@ -30,7 +30,7 @@ fn main() {
     // 无符号数: 只能为正整数和 0; 无符号的变体可以储存从 0 到 2^(n-1) 的数字
     // isize 和 usize 类型依赖运行程序的计算机架构:64 位架构上它们是 64 位的, 32 位架构上它们是 32 位的
 
-    // 数字字面值	                   例子
+    // 数字字面值	                 例子
     // Decimal (十进制)	             98_222
     // Hex (十六进制)	             0xff
     // Octal (八进制)	             0o77
@@ -53,7 +53,8 @@ fn main() {
 
     // 数值运算
     // 所有运算符列表: https://doc.rust-lang.org/book/appendix-02-operators.html
-    println!("{}", 4 / 3); // 1, 👿 rust 的除法只会保留整数
+    println!("{}", 4.0 / 3.0); // 1.3333333333333333, 如果是 float 运算产生小数, 会带小数
+    println!("{}", 4 / 3); // 1, 如果两个整型产生小数, 会把小数抹掉, 这在算法题大数加法相关题目中求商很有用.
 
     let a: i8 = 4;
     let b: i8 = 0b1111;
@@ -111,7 +112,8 @@ fn main() {
     let tup = (500, 6.4, "str");
     // 根据下标获取元组元素
     println!("{}, {}", tup.0, tup.1);
-    // 👿 解构元组, 如果使用元组解构, 你必须把所有元素都解构出来, 否则报错...
+    // 解构元组, 因为 let 支持模式匹配, 所以可以用来解构元组.
+    // 如果使用元组解构, 你必须把所有元素都解构出来, 否则报错...
     let (i, j, k) = tup;
     println!("The value of i is: {}", i);
     println!("{} {}", j, k);
@@ -124,12 +126,13 @@ fn main() {
     // 而该值被称为 单元值(unit value). 如果表达式不返回任何其他值, 则会隐式返回单元值
     let l = ();
     println!("{:?}", l);
+    let tup = (0,); // 如果元组只有一个元素, 必须加一个逗号
+    println!("{:?}", tup);
 
     /* 数组 [T; N], 必须是一致的类型, 且长度必须为编译时常量, 默认不可变 */
     // 对于原始固定长度数组, 只有实现 Copy trait 的类型才能作为其元素, 也就是说, 只有可以在枝上存放的元素才可以存放在该类型的数组中
 
-    // 👿 必须是一致的类型
-    // let m = [1, 2, 3, 4, 5, ""];
+    // let m = [1, 2, 3, 4, 5, ""]; // 👿 报错, 必须是一致的类型
     let mut n = ["Yancey", "Sayaka"];
 
     // 数组一旦创建就不可修改长度了, 它没有 push pop 等方法
@@ -207,6 +210,19 @@ fn main() {
 
     {
         let mut x = 10;
-        let ptr_x = &mut x as *mut i32; 
+        let ptr_x = &mut x as *mut i32; // 通过 as 将 &mut x 可变引用转换为 *mut i32 可变原生指针 ptr_x
+        let y = Box::new(20); // 通过 Box 将数字 20 存到堆内存上
+        let ptr_y = &*y as *const i32; // 将 y 转换成原生指针 ptr_y
+
+        unsafe {
+            *ptr_x += *ptr_y; // 两个原生指针相加
+        }
+        assert_eq!(x, 30);
     }
+
+    /* never 类型 */
+    // nerver 类型(!)是一个没有值的类型, 表示永远不会完成计算的结果.
+    // ! 的类型表达式可以强转为任何其他类型. 目前 ! 只在 nightly 版本, 还不稳定.
+    // let x: ! = panic!();
+    // let y: u32 = x;
 }

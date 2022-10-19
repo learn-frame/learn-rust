@@ -1,53 +1,51 @@
 pub mod match_control_flow_operator;
 
 fn main() {
-    let ipv4 = IpAddr::V4(127, 0, 0, 1);
-    let ipv6 = IpAddr::V6(String::from("fe80::a8aa:ff:fe10:d81c"));
-    println!("ipv4: {:#?}, ipv6: {:#?}", ipv4, ipv6);
-
-    // impl 来为枚举定义方法
-    let instance = IpAddr::V6(String::from("fe80::a8aa:ff:fe10:d81c"));
-    instance.print_ip();
-
-    plus_one(Some(1));
-
-    learn_option();
-}
-
-#[derive(Debug)]
-enum IpAddr {
-    V4(u8, u8, u8, u8),
-    V6(String),
-}
-
-// 枚举 / 结构体都可被 impl
-impl IpAddr {
-    fn print_ip(&self) {
-        dbg!(self);
+    // 无参数枚举体
+    #[allow(unused)]
+    enum Number {
+        Zero,
+        One,
+        Two,
     }
-}
 
-// Option 意味着某个变量有确切的值, 或者为空为"空".
-fn learn_option() {
-    let some_number = Some(5);
-    let some_string = Some("a string");
-    let absent_number: Option<i32> = None;
-    let x = 1;
-    println!(
-        "{:?} {:?} {:?} {}",
-        some_number, some_string, absent_number, x
-    );
-
-    // 😈 下面这个是错的, 简单来说 some_number 是 Option<i32> 类型, 而 x 是 i32 类型, 必然无法加和
-    // let sum = x + some_number;
-}
-
-// 这种强制分头计算的思路
-// 来限制空值的泛滥以增加 Rust 代码的安全性
-fn plus_one(x: Option<i32>) -> Option<i32> {
-    // 你可以通过 match 来分别进行计算
-    match x {
-        None => None,
-        Some(i) => Some(i + 1),
+    // 类 C 枚举体
+    #[allow(unused)]
+    enum Status {
+        Initial = 0,
+        Processing = 1,
+        Finish = 2,
     }
+
+    // 携带类型参数的枚举体
+    #[derive(Debug)]
+    enum IpAddr<'a> {
+        V4(u8, u8, u8, u8),
+        V6(&'a str),
+    }
+
+    let v4 = IpAddr::V4(127, 0, 0, 1);
+    let v6 = IpAddr::V6("2408:8606:1800:501::1:4");
+    println!("{:?} {:?}", v4, v6);
+
+    // 枚举也可被 impl
+    impl IpAddr<'_> {
+        #[allow(unused)]
+        fn print_ip(&self) {
+            dbg!(self);
+        }
+    }
+
+    // 枚举的一个重要实现是 Option
+    let s = Some(1);
+    let num = s.unwrap();
+    match s {
+        Some(n) => {
+            assert_eq!(num, n);
+            println!("{}", n);
+        }
+        None => panic!("nil"),
+    }
+
+    assert_eq!(&s.unwrap(), s.as_ref().unwrap());
 }
