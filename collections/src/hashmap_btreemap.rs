@@ -1,4 +1,5 @@
-use std::collections::HashMap;
+use linked_hash_map::LinkedHashMap;
+use std::collections::{BTreeMap, HashMap};
 use uuid::Uuid;
 
 pub enum Gender {
@@ -25,6 +26,7 @@ pub fn learn_hashmap() {
     visit_hashmap();
     update_hashmap();
     traverse_hashmap();
+    hashmap_vs_btreemap();
 }
 
 pub fn create_hashmap_by_class() {
@@ -141,5 +143,69 @@ pub fn traverse_hashmap() {
     }
 }
 
-// HashMap 默认使用一种 "密码学安全的(cryptographically strong)"哈希函数, 它可以抵抗 Dos 攻击
+// HashMap 默认使用一种 "密码学安全的(cryptographically strong)"哈希函数, 它可以抵抗 DDos 攻击
 // 然而这并不是可用的最快的算法, 如果有性能问题, 就换呗...
+
+/// BtreeMap, 它保证插入的 key 是按字母排序的
+fn hashmap_vs_btreemap() {
+    let mut h = HashMap::new();
+    let mut b = BTreeMap::new();
+    h.insert(3, "c");
+    h.insert(2, "b");
+    h.insert(1, "a");
+    b.insert(3, "c");
+    b.insert(2, "b");
+    b.insert(1, "a");
+    println!("HashMap: {:?}", h); // {3: "c", 2: "b", 1: "a"}
+    println!("BTreeMap: {:?}", b); // {1: "a", 2: "b", 3: "c"}
+}
+
+#[derive(Debug)]
+pub struct LRUCache {
+    cache: LinkedHashMap<i32, i32>,
+    capaticy: i32,
+}
+
+impl LRUCache {
+    pub fn new(capaticy: i32) -> Self {
+        LRUCache {
+            cache: LinkedHashMap::new(),
+            capaticy,
+        }
+    }
+
+    pub fn get(&mut self, key: i32) -> i32 {
+        if !self.cache.contains_key(&key) {
+            return -1;
+        }
+
+        let value = *self.cache.get(&key).unwrap();
+        self.cache.remove(&key);
+        self.cache.insert(key, value);
+        value
+    }
+
+    pub fn put(&mut self, key: i32, value: i32) -> () {
+        if self.cache.contains_key(&key) {
+            self.cache.remove(&key);
+        }
+
+        if self.cache.len() == self.capaticy as usize {
+            let oldest_key = *self.cache.keys().next().unwrap();
+            self.cache.remove(&oldest_key);
+        }
+
+        self.cache.insert(key, value);
+    }
+}
+
+pub fn get_lru() {
+    let mut lru = LRUCache::new(3);
+    lru.put(1, 1);
+    lru.put(2, 2);
+    lru.put(3, 3);
+    println!("{}", lru.get(4));
+    println!("{}", lru.get(1));
+    lru.put(4, 4);
+    println!("{:?}", lru);
+}
