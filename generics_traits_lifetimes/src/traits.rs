@@ -1,8 +1,10 @@
-// 好家伙, trait 就类似于 interface, 但它可以指定泛型
 // TypeScript 的 interface 可以有方法, 也可以有对象属性
 // 而 rust 中的 interface 只承载方法, 常量
 // 对象属性是要放在 struct 中的
-use std::fmt::Display;
+
+// impl Trait for Type
+// 为 Type 实现 Trait 接口
+use std::fmt::{Display, Formatter, Result};
 
 pub fn entry() {
     let tweet = Tweet {
@@ -133,6 +135,17 @@ impl<T: Display + PartialOrd> Pair<T> {
         } else {
             println!("The largest member is y = {}", self.y);
         }
+    }
+}
+
+// 对原生的, 直接导入 Debug 即可
+#[derive(Debug)]
+struct Foo; // our custom type
+
+// 也可以手动为 Foo 实现 Display trait
+impl Display for Foo {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "testing, testing")
     }
 }
 

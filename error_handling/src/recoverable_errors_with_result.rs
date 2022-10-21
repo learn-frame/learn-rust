@@ -14,16 +14,26 @@ use std::io::ErrorKind;
 // }
 
 pub fn entry() {
+    basic_result();
     use_match_to_handling_file_result();
     handle_specific_error();
     read_file_by_closure();
     panic_simple();
 
+    // Result 有两个参数, 是个泛型
+    // 第一个是 Ok 的返回值, 第二个是 Err 的返回值
     let p = propagating_errors();
     match p {
         Ok(_) => {}
         Err(_) => {}
     }
+}
+
+pub fn basic_result() {
+    let mut result: Result<i32, &str> = Ok(1);
+    assert!(result.is_ok());
+    result = Err("error");
+    assert!(result.is_err());
 }
 
 pub fn use_match_to_handling_file_result() {

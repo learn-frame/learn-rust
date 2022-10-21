@@ -84,6 +84,44 @@ enum Results<T, E> {
     Err(E),
 }
 
+// - - - - - - - - - - - - - - - -
+struct Duck;
+struct Pig;
+trait Fly {
+    fn fly(&self) -> bool;
+}
+impl Fly for Duck {
+    fn fly(&self) -> bool {
+        true
+    }
+}
+impl Fly for Pig {
+    fn fly(&self) -> bool {
+        false
+    }
+}
+fn fly_static<T: Fly>(s: T) -> bool {
+    s.fly()
+}
+fn fly_dyn(s: &dyn Fly) -> bool {
+    s.fly()
+}
+fn fly_fn() {
+    let pig = Pig;
+    let duck = Duck;
+
+    // 这两种方式叫做静态分发
+    // Rust 编译器会为 fly_static::<Pig>(pig) 和 fly_static::<Duck>(duck) 这两个具体类型的调用生成特殊化的代码.
+    // 也就是说, 对于编译器来说, 这种抽象并不存在, 因为在编译阶段, 泛型己经被展开为具体类型的代码
+    assert_eq!(fly_static::<Pig>(pig), false);
+    assert_eq!(fly_static::<Duck>(duck), true);
+
+    // fly_dyn 函数是动态分发方式的
+    // 它会在运行时查找相应类型的方法, 会带来一定运行时开销
+    assert_eq!(fly_dyn(&Duck), true);
+    assert_eq!(fly_dyn(&Pig), false);
+}
+
 // 泛型代码的性能
 // Rust 通过在编译时进行泛型代码的单态化(monomorphization)来保证效率.
 // 单态化是一个通过填充编译时使用的具体类型, 将通用代码转换为特定代码的过程.
