@@ -100,12 +100,18 @@ impl Fly for Pig {
         false
     }
 }
+
+#[allow(unused)]
 fn fly_static<T: Fly>(s: T) -> bool {
     s.fly()
 }
+
+#[allow(unused)]
 fn fly_dyn(s: &dyn Fly) -> bool {
     s.fly()
 }
+
+#[allow(unused)]
 fn fly_fn() {
     let pig = Pig;
     let duck = Duck;
