@@ -226,3 +226,8 @@ fn main() {
     // let x: ! = panic!();
     // let y: u32 = x;
 }
+
+// 类型系统与多态性
+// 如果一个类型系统允许一段代码在不同的上下文中具有不同的类型, 这样的类型系统就叫作多态类型系统. 对于静态类型的语言来说, 多态性的好处是可以在不影响类型丰富的前提下, 为不同的类型编写通用的代码.
+// 现代编程语言包含了三种多态形式: 参数化多态(Parametric polymorphism), Ad-hoc 多态(Ad-hoc polymorphism)和子类型多态(Subtype polymorphism).
+// 如果按照多态发生时间来划分, 又可分为静多态(Static polymorphism)和动多态(Dynamic polymorphism)
