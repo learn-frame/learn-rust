@@ -220,11 +220,75 @@ fn main() {
         assert_eq!(x, 30);
     }
 
+    /* 零大小类型(ZST) */
+    // 单元类型和单元结构体大小为零, 单元类型组成的数组大小也为零
+    // ZST 类型的特点是, 它们的值就是其本身, 运行时并不占用内存空间. ZST 类型代表的意义正是空
+    // 比较有趣的实现就是 HashSet<T> 实际上是由 HashMap<K, ()> 发展来了.
+    enum Void {}
+    struct Foo;
+    #[allow(unused)]
+    struct Baz {
+        foo: Foo,
+        qux: (),
+        baz: [u8; 0],
+    }
+    // 可通过 std::mem::size_of() 来查找一个表达式占用内存的字节大小
+    assert_eq!(std::mem::size_of::<Baz>(), 0);
+    assert_eq!(std::mem::size_of::<Void>(), 0);
+
+    let vec = vec![(); 10];
+    // 使用这种方式要比 0..10 获得较高的性能, 不过也无所谓吧
+    for i in vec {
+        println!("{:?}", i);
+    }
+
+    for i in 0..10 {
+        println!("{:?}", i);
+    }
+
     /* never 类型 */
     // nerver 类型(!)是一个没有值的类型, 表示永远不会完成计算的结果.
+    // nerver 类型系统又叫底类型(Bottom Type), 底类型源自类型理论的术语, 它的特点是没有值, 其次是是其他任意类型的子类型.
+    // 如果说 ZST 类型表示空的话，那么底类型就表示无. 底类型无值, 而且它可以等价于任意类型.
+    // Rust 中的底类型用叹号表示, 此类型也被称为 BangType, Rust 中有很多种情况确实没有值, 但为了类型安全, 必须把这些情况纳入类型系统进行统一处理, 这些情况包括:
+    // 发散函数(Diverging Function), 指会导致线程崩溃的 panic!(), 或者用于退出函数的 std::process::exit
+    // continue 和 break 关键字, 它们只是表示流程的跳转, 并不会返回什么
+    // loop 循环, loop 循环虽然可以返回某个值, 但也有需要无限循环的时候.
+    // 空枚举, 比如 enum Void {}, 它完全没有任何成员, 因而无法对其进行变量绑定, 不知道如何初始化并使用它, 所以它也是底类型.
+
     // ! 的类型表达式可以强转为任何其他类型. 目前 ! 只在 nightly 版本, 还不稳定.
     // let x: ! = panic!();
     // let y: u32 = x;
+    // 返回 ! 类型
+
+    fn foo() -> ! {
+        loop {
+            println!("nerver");
+        }
+    }
+
+    #[allow(unused)]
+    let i = if false {
+        foo();
+    } else {
+        100
+    };
+
+    /* 类型推导与 Turbofish 操作符 */
+    // Rust 的类型推导并不强大, 只能在局部范围内进行类型推导
+    // 当 Rust 无法从上下文中自动推导出类型的时候，编译器会通过错误信息提示你
+    let x = "1";
+    // println!("{:?}", x.parse().unwrap()); // 😈 can't call method `parse` on ambiguous numeric type `{integer}`
+    // 因此你可以给表达式赋值给某个变量, 然后给这个变量标注明确的值
+    let int_x: i32 = x.parse().unwrap(); // 这样是可以的
+    println!("{:?}", int_x);
+    // Rust 还提供了一种标注类型的方法, 用于方便地在值表达式中直接标注类型
+    // 下面这个代码使用了 parse::<i32>() 这样的形式为泛型函数标注类型, 就避免了新建一个变量, 这种标注类型 ::<> 的形式就叫作 turbofish 操作符
+    println!("{:?}", x.parse::<i32>().unwrap());
+    // Rust 的类型推导还是不够强大, 下面这个居然出错了.
+    // let b = 1.is_positive(); // 😈 you must specify a type for this binding, like `i32`: `x: i32`
+    // 你必须给它明确的变量
+    assert!((-1 as i32).is_negative());
 }
 
 // 类型系统与多态性
@@ -232,4 +296,4 @@ fn main() {
 // 现代编程语言包含了三种多态形式: 参数化多态(Parametric polymorphism), Ad-hoc 多态(Ad-hoc polymorphism)和子类型多态(Subtype polymorphism).
 // 如果按照多态发生时间来划分, 又可分为静多态(Static polymorphism)和动多态(Dynamic polymorphism). 静多态发生在编译期, 动多态发生在运行时.
 // 参数化多态和 Ad-hoc 多态一般是静多态, 子类型多态一般是动多态. 静多态牺牲灵活性获取性能, 动多态牺牲性能获取灵活性. 动多态在运行时需要查表, 占用较多空间, 所以一般情况下都使用静多态. Rust 语言同时支持静多态和动多态, 静多态就是一种零成本抽象.
-// 参数化多态实际就是指泛型, Ad-hoc 多态也叫特定多态
+// 参数化多态实际就是指泛型, Ad-hoc 多态也叫特定多态, Rust 中的类型系统目前只支持参数化多态和 Ad-hoc 多态, 也就是泛型和 trait

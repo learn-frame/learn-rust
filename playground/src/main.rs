@@ -1,7 +1,4 @@
 fn main() {
-    let a = "xx";
-    println!("{}", a);
-
-    let a = 1;
-    println!("{}", a);
+    assert_eq!(std::mem::size_of::<&[u32; 5]>(), 8);
+    assert_eq!(std::mem::size_of::<&mut [u32]>(), 16);
 }
