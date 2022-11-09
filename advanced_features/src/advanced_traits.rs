@@ -29,16 +29,19 @@ struct Node<T> {
 
 pub trait Iterator {
     // 关联类型, 类似于泛型
+    // 比起泛型, 它的优点是更加内聚
+    // 差距可以跟 IteratorByGenerics 的写法来对比
     type Item;
 
+    // Self 是每个 trait 都带有的隐式类型参数, 代表实现当前 trait 的具体类型.
     fn next(&mut self) -> Option<Self::Item>;
 
     fn before(&mut self) -> Option<Self::Item>;
 }
 
 impl Iterator for Counter {
-    // 比起泛型, 它的优点显而易见, 只需要注明一次类型即可
-    type Item = Node<u32>; // 手写类型
+    // 实现某个 trait 时, 关联类型必须指定类型
+    type Item = Node<u32>;
 
     fn next(&mut self) -> Option<Self::Item> {
         todo!()
@@ -55,7 +58,7 @@ pub trait IteratorByGenerics<T> {
     fn before(&mut self) -> Option<T>;
 }
 
-// 如果用泛型就没完了, 只要是 <T> 的, 你都得改成指定的类型
+// 如果用泛型, 只要是 <T> 的, 你都得改成指定的类型
 impl IteratorByGenerics<u32> for Counter {
     // 手写类型
     fn next(&mut self) -> Option<u32> {
@@ -217,11 +220,13 @@ impl fmt::Display for Points {
 // Points 需要实现 OutlinePrint
 impl OutlinePrint for Points {}
 
-/// 孤儿规则, 只要 trait 或类型对于当前 crate 是本地的话就可以在此类型上实现该 trait
-/// 比如不能在当前这个 crate 中为 Vec<T> 实现 Display trait. 这是因为 Display 和 Vec<T> 都定义于标准库中
-/// 因此, 你可用 newtype 方式, 创建一个包含 Vec<T> 实例的 Wrapper 结构, 其实就是卷一下.
+/// 孤儿规则: 该 trait 和要实现该 trait 的那个类型至少有一个要在当前 crate 中定义, 才能实现某个 trait
+/// 比如不能在当前这个 crate 中为 Vec<T> 实现 Display trait. 这是因为 Display 和 Vec<T> 都定义于标准库中, 因为如果你直接改了 std 的方法, 那就出大事了
+/// 因此你可以通过 `impl 原生 for 自定义`
+
 struct Wrapper(Vec<String>);
 
+// impl 原生 for 自定义
 impl fmt::Display for Wrapper {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // Display 的实现使用 self.0 来访问其内部的 Vec<T>
