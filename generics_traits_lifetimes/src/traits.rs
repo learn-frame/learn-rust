@@ -5,6 +5,7 @@
 // impl Trait for Type
 // 为 Type 实现 Trait 接口
 use std::fmt::{Display, Formatter, Result};
+use std::ops::Add;
 
 pub fn entry() {
     let tweet = Tweet {
@@ -15,6 +16,22 @@ pub fn entry() {
     };
 
     println!("{}", tweet.summarize());
+
+    // 继承
+    let p = MyPaginate {};
+    p.set_page();
+    p.set_per_page();
+    p.set_skip_page();
+
+    // 泛型约束
+    add(1, 1);
+
+    // trait 在编译时是无法确定大小的一种类型
+    // 而静态要比动态性能更好
+    let p1 = MyPaginate {};
+    on_page_static(p1);
+    let p2 = MyPaginate {};
+    on_page_dynamic(&p2);
 }
 
 pub trait Summary {
@@ -154,3 +171,76 @@ impl Display for Foo {
 // 我们可以对任何实现了 Display trait 的类型调用由 ToString 定义的 to_string 方法
 // impl<T: Display> ToString for T {}
 // let s = 3.to_string();
+
+/// 继承
+trait Page {
+    fn set_page(&self) -> ();
+}
+
+trait PerPage {
+    fn set_per_page(&self) -> ();
+}
+
+struct MyPaginate;
+
+impl Page for MyPaginate {
+    fn set_page(&self) -> () {
+        todo!()
+    }
+}
+impl PerPage for MyPaginate {
+    fn set_per_page(&self) -> () {
+        todo!()
+    }
+}
+
+trait Paginate: Page + PerPage {
+    fn set_skip_page(&self) -> ();
+}
+
+impl<T: Page + PerPage> Paginate for T {
+    fn set_skip_page(&self) -> () {
+        todo!()
+    }
+}
+
+/// 泛型约束
+// 😈 下面这段代码是错的, 因为 T 是泛型, 理论设置什么类型都可以,
+// 但加法却只能接受数字和字符串, 这就会出错
+// fn add<T>(a: T, b: T) -> T {
+//     a + b
+// }
+// 因此它要求你有如下写法, 即表示 sum 函数的参数必须实现 Add trait
+pub fn add<T: Add<Output = T>>(a: T, b: T) -> T {
+    a + b
+}
+
+// 使用 trait 对泛型进行约束, 叫作 trait 限定(trait Bound). 格式如下:
+// fn generic<T : MyTrait + MyOtherTrait + SomeStandardTrait> (t : T) {}
+// 该泛型函数签名要表达的意思是: 需要一个类型 T, 并且该类型 T 必须实现 MyTrait,
+// MyOtherTrait 和 SomeStandardTrait 中定义的全部方法, 才能使用该泛型函数.
+
+// 如果像这种很复杂的
+#[allow(unused)]
+fn some_function_2<T: Displayed + Clone, U: Clone + Debug>(t: T, u: U) {}
+
+// 可以用 where 语法
+#[allow(unused)]
+fn some_function_3<T, U>(t: T, u: U)
+where
+    T: Displayed + Clone,
+    U: Clone + Debug,
+{
+}
+
+/// 抽象类型
+/// 
+// 静态
+fn on_page_static(s: impl Page + PerPage) {
+    s.set_page()
+}
+
+// 静态
+fn on_page_dynamic(s: &MyPaginate) {
+    s.set_page()
+}
