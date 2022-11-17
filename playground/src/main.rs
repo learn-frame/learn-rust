@@ -1,4 +1,20 @@
+use std::ops::Drop;
+
 fn main() {
-    assert_eq!(std::mem::size_of::<&[u32; 5]>(), 8);
-    assert_eq!(std::mem::size_of::<&mut [u32]>(), 16);
+    varible_shadowing_drop();
+}
+
+#[derive(Debug)]
+struct S(i32);
+impl Drop for S {
+    fn drop(&mut self) {
+        println!("drop for {}", self.0);
+    }
+}
+
+fn varible_shadowing_drop() {
+    let x = S(1);
+    println!("create x: {:?}", x);
+    let x = S(2);
+    println!("create shadowing x: {:?}", x);
 }
