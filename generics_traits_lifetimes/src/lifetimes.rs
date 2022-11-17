@@ -178,3 +178,22 @@ where
         y
     }
 }
+
+#[allow(unused)]
+fn foo1() {
+    // 😈 Box 没有实现 Copy trait, 导致 a 的所有权被 move 到 b 了
+    // 下面你就不能打印 a
+    // let a = Box::new(1);
+    // let b = a;
+    // println!("{:?}", a);
+
+    // 而对于实现 Copy trait 的变量, 相当于 c 的值复制给了 d
+    // 而此时 c 还活着
+    #[allow(unused)]
+    let c = 1;
+    let d = c;
+    println!("{:?}", c);
+}
+// 此外, 在退出 foo1 函数后, c, b 被释放内存, 没什么好说的, 因为存在栈中
+// 但是变量 a 是指针, 如果就这样被清空, 那么其指向的己分配堆内存怎么办
+// 其实 Box<T> 类型的指针会在变量 a 被清空之时, 也会自动清空其指向的己分配堆内存, 此之谓智能指针

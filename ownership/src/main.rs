@@ -89,7 +89,27 @@ fn bar(name: &str) {
 pub fn func() {
     let str = String::from("ccc");
     // {:?} 用来获取引用的指针, 如果不是引用, 在编译时不会报错, 在运行时会报错
-    println!("{:p}", &str); 
+    println!("{:p}", &str);
+}
+
+#[derive(Debug)]
+struct S(i32);
+impl Drop for S {
+    fn drop(&mut self) {
+        println!("drop for {}", self.0);
+    }
+}
+// 对于变量遮蔽, 并不是第二 x 的声明会直接把第一个 x 给 drop 掉, 具体打印如下:
+// create x: S(1)
+// create shadowing x: S(2)
+// drop for 2
+// drop for 1
+#[allow(unused)]
+fn varible_shadowing_drop() {
+    let x = S(1);
+    println!("create x: {:?}", x);
+    let x = S(2);
+    println!("create shadowing x: {:?}", x);
 }
 
 // Copy trait

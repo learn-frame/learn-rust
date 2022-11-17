@@ -1,5 +1,10 @@
 //! 指定在值离开作用域时应该执行的代码的方式是实现 Drop trait
 //! Drop trait 要求实现一个叫做 drop 的方法, 它获取一个 self 的可变引用
+//! RAII (Resource Acquisition Is Initialization)
+//! 在现代 C++ 中, RAII 的机制是使用构造函数来初始化资源, 使用析构函数来回收资源.
+//! 看上去 RAII 所要做的事确实跟 GC 差不多. 但 RAII 和 GC 最大的不同在于, RAII 将资源托管给创建堆内存的指针对象本身来管理, 并保证资源在其生命周期内始终有效
+//! 一旦生命周期终止, 资源马上会被回收. 而 GC 是由第三方只针对内存来统一回收垃圾的, 这样就很被动
+//! 而 Drop 除了释放内存, Dro p还可以做很多其他的工作, 比如释放文件和网络连接
 
 pub fn entry() {
     cunstom_drop();

@@ -69,4 +69,27 @@ fn main() {
     };
 
     dbg!(instance.area());
+
+    // 联合体和结构体
+    #[allow(unused)]
+    union U {
+        f1: i32,
+        f2: u64,
+        f3: u32,
+    }
+
+    #[allow(unused)]
+    struct S {
+        f1: i32,
+        f2: u64,
+        f3: u32,
+    }
+
+    println!(
+        "{:?} {:?}",
+        // 联合体区最大的内存占用, 即 f2 占 8 字节, 那就是 8
+        std::mem::size_of::<U>(), // 8
+        // 结构体是所有属性的累加(f1: 4 + f2: 8 + f3: 4)
+        std::mem::size_of::<S>() // 16
+    )
 }
