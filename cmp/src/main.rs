@@ -3,9 +3,6 @@ use std::cmp::*;
 fn main() {
     ordering(1, 2);
     compare();
-
-    let x = vec![1];
-    x.
 }
 
 fn ordering(a: i32, b: i32) {
