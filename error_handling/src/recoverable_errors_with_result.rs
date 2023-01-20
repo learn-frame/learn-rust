@@ -108,7 +108,8 @@ fn read_username_from_file() -> Result<String, io::Error> {
     }
 }
 
-// 使用 ? 运算符, 更加优雅
+// ? 运算符是一个错误处理的语法糖, 它会自动在出现错误的情况下返回 std::io::Error.
+// 这样就可以在程序发生错误时自动返回错误码, 并在退出程序时打印相关的错误信息, 方便调试, 而不需要开发者手动处理错误了
 pub fn propagating_errors() -> Result<String, io::Error> {
     let mut s = String::new();
 
