@@ -129,8 +129,30 @@ fn fly_fn() {
 }
 
 // 泛型代码的性能
-// Rust 通过在编译时进行泛型代码的单态化(monomorphization)来保证效率.
+// Rust 通过在编译时进行泛型代码的单态化(Monomorphization)来保证效率.
 // 单态化是一个通过填充编译时使用的具体类型, 将通用代码转换为特定代码的过程.
+// 举个例子, 下面的代码
 
-// let integer = Some(5);
-// let integer = Option_i32::Some(5);
+#[allow(unused)]
+fn foo<T>(x: T) -> T {
+    x
+}
+#[allow(unused)]
+fn process_foo() {
+    assert_eq!(foo(1), 1);
+    assert_eq!(foo("hello"), "hello");
+}
+// 会被编译成类似于如下的形式, 好处是性能好, 没有运行时开销; 缺点是会让生成的二进制变大
+#[allow(unused)]
+fn foo1(x: i32) -> i32 {
+    x
+}
+#[allow(unused)]
+fn foo2(x: &'static str) -> &'static str {
+    x
+}
+#[allow(unused)]
+fn process_foo_1() {
+    assert_eq!(foo1(1), 1);
+    assert_eq!(foo2("hello"), "hello");
+}

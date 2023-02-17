@@ -247,14 +247,14 @@ fn main() {
     }
 
     /* never 类型 */
-    // nerver 类型(!)是一个没有值的类型, 表示永远不会完成计算的结果.
+    // nerver 类型(!)是一个没有值的类型, 表示永远不会完成计算的结果. 由于 Rust 中的底类型用叹号(!) 表示, 此类型也被称为 Bang Type
     // nerver 类型系统又叫底类型(Bottom Type), 底类型源自类型理论的术语, 它的特点是没有值, 其次是是其他任意类型的子类型.
     // 如果说 ZST 类型表示空的话，那么底类型就表示无. 底类型无值, 而且它可以等价于任意类型.
     // Rust 中的底类型用叹号表示, 此类型也被称为 BangType, Rust 中有很多种情况确实没有值, 但为了类型安全, 必须把这些情况纳入类型系统进行统一处理, 这些情况包括:
-    // 发散函数(Diverging Function), 指会导致线程崩溃的 panic!(), 或者用于退出函数的 std::process::exit
-    // continue 和 break 关键字, 它们只是表示流程的跳转, 并不会返回什么
-    // loop 循环, loop 循环虽然可以返回某个值, 但也有需要无限循环的时候.
-    // 空枚举, 比如 enum Void {}, 它完全没有任何成员, 因而无法对其进行变量绑定, 不知道如何初始化并使用它, 所以它也是底类型.
+    // - 发散函数(Diverging Function), 指会导致线程崩溃的 panic!(), 或者用于退出函数的 std::process::exit
+    // - continue 和 break 关键字, 它们只是表示流程的跳转, 并不会返回什么
+    // - loop 循环, loop 循环虽然可以返回某个值, 但也有需要无限循环的时候.
+    // - 空枚举, 比如 enum Void {}, 它完全没有任何成员, 因而无法对其进行变量绑定, 不知道如何初始化并使用它, 所以它也是底类型.
 
     // ! 的类型表达式可以强转为任何其他类型. 目前 ! 只在 nightly 版本, 还不稳定.
     // let x: ! = panic!();
@@ -278,7 +278,7 @@ fn main() {
     // Rust 的类型推导并不强大, 只能在局部范围内进行类型推导
     // 当 Rust 无法从上下文中自动推导出类型的时候，编译器会通过错误信息提示你
     let x = "1";
-    // println!("{:?}", x.parse().unwrap()); // 😈 can't call method `parse` on ambiguous numeric type `{integer}`
+    // println!("{:?}", x.parse().unwrap()); // 😈 can't call method `parse` on ambiguous numeric type `{integer}`, 因为 Rust 中的数字类型很多,  parse 不知道你想让 x 转成 i32 还是其他, 因此你需要自己指明
     // 因此你可以给表达式赋值给某个变量, 然后给这个变量标注明确的值
     let int_x: i32 = x.parse().unwrap(); // 这样是可以的
     println!("{:?}", int_x);
