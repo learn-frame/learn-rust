@@ -1,9 +1,5 @@
 # Learn Rust
 
-- 蟹妖, 刚下飞机, 人已生锈.
-- In Rust We Trust.
-- Rust 虐我千百遍, 我待 Rust 如初恋.
-
 | Rust Logo                                                                   | Ferris                                                            | Me                                                            |
 | --------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- |
 | <img src="./public/assets/rust-logo-blk.svg" alt="rust-logo" height="160"/> | <img src="./public/assets/ferris.png" alt="ferris" height="160"/> | <img src="./public/assets/me.jpg" alt="ferris" height="160"/> |
