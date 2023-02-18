@@ -1,6 +1,6 @@
 # Learn Rust
 
-| Rust Logo                                                                   | Ferris                                                            | Me                                                            |
+| Logo                                                                        | Ferris                                                            | Me                                                            |
 | --------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- |
 | <img src="./public/assets/rust-logo-blk.svg" alt="rust-logo" height="160"/> | <img src="./public/assets/ferris.png" alt="ferris" height="160"/> | <img src="./public/assets/me.jpg" alt="ferris" height="160"/> |
 
