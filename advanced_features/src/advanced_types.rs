@@ -71,7 +71,7 @@ pub fn match_with_never_type() {
 }
 
 // ! 另外一个用途是 panic!
-// 因为孤儿规则(orphan rule)这里没法直接实现 Option, 这里就不展示了
+// 因为孤儿规则(Orphan Rule)这里没法直接实现 Option, 这里就不展示了
 // val 是 T 类型, panic! 是 ! 类型, 但这能工作是因为 panic! 并不产生一个值, 它会终止程序
 // impl<T> Option<T> {
 //     pub fn unwrap(self) -> T {

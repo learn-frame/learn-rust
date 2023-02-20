@@ -1,6 +1,8 @@
-// TypeScript 的 interface 可以有方法, 也可以有对象属性
-// 而 rust 中的 interface 只承载方法, 常量
-// 对象属性是要放在 struct 中的
+//! 从语义上来说, trait是在行为上对类型的约束, 这种约束可以让 trait 有如下 4 种用法:
+//! - 接口抽象. 接口是对类型行为的统一约束.
+//! - 泛型约束. 泛型的行为被 trait 限定在更有限的范围内.
+//! - 抽象类型. 在运行时作为一种间接的抽象类型去使用, 动态地分发给具体的类型.有 trait 对象和 impl Trait 两种 
+//! - 标签 trait. 对类型的约束, 可以直接作为一种标签使用.
 
 // impl Trait for Type
 // 为 Type 实现 Trait 接口
@@ -26,8 +28,16 @@ pub fn entry() {
     // 泛型约束
     add(1, 1);
 
-    // trait 在编译时是无法确定大小的一种类型
-    // 而静态要比动态性能更好
+    // trait 在编译时是无法确定大小的一种类型, 而静态要比动态性能更好
+    //
+    // 静态
+    fn on_page_static(s: impl Page + PerPage) {
+        s.set_page()
+    }
+    // 动态
+    fn on_page_dynamic(s: &MyPaginate) {
+        s.set_page()
+    }
     let p1 = MyPaginate {};
     on_page_static(p1);
     let p2 = MyPaginate {};
@@ -194,10 +204,12 @@ impl PerPage for MyPaginate {
     }
 }
 
+// 继承 trait
 trait Paginate: Page + PerPage {
     fn set_skip_page(&self) -> ();
 }
 
+// 实现 trait
 impl<T: Page + PerPage> Paginate for T {
     fn set_skip_page(&self) -> () {
         todo!()
@@ -219,6 +231,7 @@ pub fn add<T: Add<Output = T>>(a: T, b: T) -> T {
 // fn generic<T : MyTrait + MyOtherTrait + SomeStandardTrait> (t : T) {}
 // 该泛型函数签名要表达的意思是: 需要一个类型 T, 并且该类型 T 必须实现 MyTrait,
 // MyOtherTrait 和 SomeStandardTrait 中定义的全部方法, 才能使用该泛型函数.
+// 从数学角度分析比较好理解, 如 impl<T: A + B> C for T, 冒号意味着包含于, 加号代表着交集, 即为所有 T ⊂ (A ∩ B) 实现 Trait C
 
 // 如果像这种很复杂的
 #[allow(unused)]
@@ -231,16 +244,4 @@ where
     T: Displayed + Clone,
     U: Clone + Debug,
 {
-}
-
-/// 抽象类型
-/// 
-// 静态
-fn on_page_static(s: impl Page + PerPage) {
-    s.set_page()
-}
-
-// 静态
-fn on_page_dynamic(s: &MyPaginate) {
-    s.set_page()
 }

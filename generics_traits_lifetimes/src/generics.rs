@@ -112,6 +112,18 @@ fn fly_dyn(s: &dyn Fly) -> bool {
 }
 
 #[allow(unused)]
+fn f1(s: impl Fly + 'static) -> Box<dyn Fly> {
+    s.fly();
+    Box::new(s)
+}
+
+#[allow(unused)]
+fn f2(s: impl Fly) -> impl Fly {
+    s.fly();
+    s
+}
+
+#[allow(unused)]
 fn fly_fn() {
     let pig = Pig;
     let duck = Duck;

@@ -222,7 +222,7 @@ impl OutlinePrint for Points {}
 
 /// 孤儿规则: 该 trait 和要实现该 trait 的那个类型至少有一个要在当前 crate 中定义, 才能实现某个 trait
 /// 比如不能在当前这个 crate 中为 Vec<T> 实现 Display trait. 这是因为 Display 和 Vec<T> 都定义于标准库中, 因为如果你直接改了 std 的方法, 那就出大事了
-/// 因此你可以通过 `impl 原生 for 自定义`
+/// 因此你可以通过 `impl 原生 for 自定义`; 或者把原生 trait 抄到当前的 crate 中, 这样你就可以对当前 crate 中的 trait 进行修改, 而非改的原生的
 
 struct Wrapper(Vec<String>);
 
