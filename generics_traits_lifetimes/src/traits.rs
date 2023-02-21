@@ -1,7 +1,7 @@
 //! 从语义上来说, trait是在行为上对类型的约束, 这种约束可以让 trait 有如下 4 种用法:
 //! - 接口抽象. 接口是对类型行为的统一约束.
 //! - 泛型约束. 泛型的行为被 trait 限定在更有限的范围内.
-//! - 抽象类型. 在运行时作为一种间接的抽象类型去使用, 动态地分发给具体的类型.有 trait 对象和 impl Trait 两种 
+//! - 抽象类型. 在运行时作为一种间接的抽象类型去使用, 动态地分发给具体的类型.有 trait 对象和 impl Trait 两种
 //! - 标签 trait. 对类型的约束, 可以直接作为一种标签使用.
 
 // impl Trait for Type
@@ -245,3 +245,20 @@ where
     U: Clone + Debug,
 {
 }
+
+/// 标签 trait
+/// - Sized trait, 用来标识编译期可确定大小的类型.
+/// - Unsize trait, 目前该 trait 为实验特性, 用于标识动态大小类型(DST).
+/// - Copy trait, 用来标识可以按位复制其值的类型.
+/// - Send trait,  用来标识可以跨线程安全通信的类型, 可以安全地在线程间传递值, 也就是说可以跨线程传递所有权.
+/// - Sync trait, 用来标识可以在线程间安全共享引用的类型, 可以跨线程安全地传递共享(不可变)引用.
+/// 有了 Send trait 和 Sync trait, 就可以把 Rust 中所有的类型归为两类: 可以安全跨线程传递的值和引用, 以及不可以跨线程传递的值和引用
+#[allow(unused)]
+struct Foo1<T>(T); // 等价于 Foo<T: Sized>
+#[allow(unused)]
+struct Bar1<T: ?Sized>(T);
+
+// Trait 的三个问题
+// - 孤儿规则, #[fundamental]
+// - 重叠问题. #[feature(specialization)]
+// - 关联类型不支持泛型. 泛型关联类型 (Generic Associated Type, GAT)

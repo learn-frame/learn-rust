@@ -9,6 +9,8 @@
 //! 很多编程语言提供了自己特殊的线程实现, 编程语言提供的线程被称为绿色(green)线程,
 //! 使用绿色线程的语言会在不同数量的 OS 线程的上下文中执行它们. 为此, 绿色线程模式
 //! 被称为 M:N 模型: M 个绿色线程对应 N 个 OS 线程, 这里 M 和 N 不必相同.
+use std::ops::Deref;
+use std::rc::Rc;
 use std::thread;
 use std::time::Duration;
 
@@ -17,6 +19,7 @@ pub fn entry() {
     wait_for_all_thread();
     wait_for_all_thread1();
     use_move();
+    use_move_but_ubimplenment_send_and_sync_triat();
 }
 
 // hi number 1 from the main thread!
@@ -36,7 +39,6 @@ pub fn create_new_thread() {
         }
     });
 
-    // 稍微复习下: 1..5 等价于 [1, 2, 3, 4]
     // 当主线程结束时, 新线程也会结束, 而不管其是否执行完毕
     // 因此主线程走完 4 之后就结束了, 新线程走一次 5 就结束了
     for i in 1..5 {
@@ -110,13 +112,36 @@ pub fn wait_for_all_thread1() {
 }
 
 pub fn use_move() {
-    let v = vec![1, 2, 3];
+    let mut v = vec![1, 2, 3];
 
     let handle = thread::spawn(move || {
         // Rust 不知道这个新建线程会执行多久, 所以无法知晓 v 的引用是否一直有效
         // 使用 move 关键字强制获取它使用的值的所有权
-        println!("{:?}", v); // [1, 2, 3]
+        v.push(5);
     });
 
     handle.join().unwrap();
+
+    // 由于 v 已经被 move 到子线程了, 外面就获取不到了
+    // 此外, 由于 v 里面的元素是 i32 类型, 实现了 Send 和 Sync trait
+    // 所以可以直接 move, 我们看下面一个例子
 }
+
+// 这个例子中 v 是 Rc 类型, Rc 没有实现 Send 和 Sync, 你不能把它们 move 到子线程中
+pub fn use_move_but_ubimplenment_send_and_sync_triat() {
+    let v = Rc::new(vec![1, 2, 3]);
+
+    // 😈: `Rc<Vec<{integer}>>` cannot be sent between threads safely the trait `Send` is not implemented for `Rc<Vec<{integer}>>`
+    let handle = thread::spawn(move || {
+        // v
+    });
+
+    handle.join().unwrap();
+
+    println!("{:?}", v);
+}
+
+// Rust 为所有类型(for ..), 以及两个裸指针实现了 Send
+// unsafe impl Send for .. { }
+// impl<T: ?Sized> !Send for *const T { } 
+// impl<T: ?Sized> !Send for *mut T { }
