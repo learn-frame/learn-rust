@@ -261,4 +261,4 @@ struct Bar1<T: ?Sized>(T);
 // Trait 的三个问题
 // - 孤儿规则, #[fundamental]
 // - 重叠问题. #[feature(specialization)]
-// - 关联类型不支持泛型. 泛型关联类型 (Generic Associated Type, GAT)
+// - 关联类型不支持泛型. 泛型关联类型(Generic Associated Type, GAT)
