@@ -9,6 +9,8 @@ use std::{
     rc::Rc,
 };
 
+mod string;
+
 fn main() {
     // 当多种类型均有可能时, 必须增加类型注解
     // 必须显式指定变量的数据类型
@@ -392,4 +394,6 @@ fn main() {
     let my_num = MySpecialNumber::from(existing_var);
     #[allow(unused)]
     let my_num: MySpecialNumber = existing_var.into();
+
+    string::entry();
 }
