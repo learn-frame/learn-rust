@@ -3,10 +3,11 @@ pub fn entry() {
     kind_of_string();
     learn_string_slice();
     learn_string();
-    visit_ele_of_string();
-    visit_range_of_string();
+    get_ele_of_string();
+    get_range_of_string();
     modify_string();
     delete_string();
+    search_string();
 }
 
 pub fn learn_char() {
@@ -83,7 +84,7 @@ pub fn learn_string() {
 /// Rust 中的字符串不能使用索引访问其中的字符, 因为字符串是 UTF-8 字节序列, 到底是返回字节还是码点是一个问题
 /// 因此 Rust 提供了 string.chars() 和 string.bytes(), 即按字节处理和按字符处理
 /// 两者都返回一个可迭代对象, chars 的 next 方法按照按码位进行, bytes 的 next 方法按字节进行迭代
-pub fn visit_ele_of_string() {
+pub fn get_ele_of_string() {
     let mut chars = "a🐶c".chars();
     println!(
         "{:?} {:?} {:?} {:?}",
@@ -109,7 +110,7 @@ pub fn visit_ele_of_string() {
 
 /// Rust 虽然不能按索引访问字符串中的字符,
 /// 但可以通过 get / get_mut 获取字符串中的一个范围
-pub fn visit_range_of_string() {
+pub fn get_range_of_string() {
     let mut string = String::from("a🐶c");
 
     println!(
@@ -128,7 +129,7 @@ pub fn visit_range_of_string() {
     // assert_eq!(("a", "🐶c"), string.split_at(2));
 }
 
-// 从追加, 连接, 更新吗
+/// 追加, 连接, 更新
 pub fn modify_string() {
     // 追加
     let mut string: String = "hello, world".into();
@@ -191,11 +192,79 @@ pub fn modify_string() {
     println!("{}", string_chars); // hello-thank-you-thank-you-very-much
 }
 
-// 删除字符串
+/// 删除字符串
 pub fn delete_string() {
-    let mut string = String::from("a🐶c");
+    let mut string = String::from("a🐶cdefg");
+    // remove 是按照字符删除的, 只要不越界, 放心使用
     string.remove(1);
-    println!("{}", string); // ac
+    println!("{}", string); // acdefg
+
     // 😈: panicked at 'byte index 1000 is out of bounds of `ac`'
-    string.remove(1000);
+    // string.remove(1000);
+
+    string.pop().unwrap();
+    println!("{}", string); // acdef
+
+    // truncate 用于将字符串的长度缩减至 new_len 个长度
+    // 如果 new_len 超过原字符串的长度, 还是返回原字符串
+    // truncate 是按照字节来的, 会检查 is_char_boundary
+    string.truncate(1000000);
+    println!("{}", string); // acdef
+
+    // 清空字符串
+    string.clear();
+    assert_eq!(String::new(), string);
+
+    let mut s = String::from("a🐶cde🐶fg");
+    let index_of_dog_emoji = s.find('🐶').unwrap_or(s.len());
+    let t = s.drain(..index_of_dog_emoji).collect::<String>();
+    println!("s: {}, t: {}", s, t); // s: 🐶cde🐶fg, t: a
+}
+
+/// 字符串查找
+/// Rust 原生不支持正则表达式, 但有个三方包 regex 可以使用, 不过 Rust 提供了
+///
+/// - 存在性判断. 相关方法包括 contains, starts_with, ends_with
+/// - 位置匹配. 相关方法包括 find, rfind
+/// - 分割字符串. 相关方法包括 split, rsplit, split_terminator, rsplit_terminator, splitn, rsplitn
+/// - 捕获匹配. 相关方法包括 matches, rmatches, match_indices, rmatch_indices
+/// - 删除匹配. 相关方法包括 trim_matches, trim_left_matches, trim_right_matches
+/// - 替代匹配. 相关方法包括 replace, replacen
+pub fn search_string() {
+    let string = "abcd🐶efgh🐶ijk";
+    let string1: String = "hello thank you thank you very much".into();
+
+    /* 存在性判断 */
+
+    // contains
+    // The [pattern] can be a &str, [char], a slice of [char]s, or a function or closure that determines if a character matches
+    assert!(!string.contains('p'));
+    assert!(string.contains("d🐶e"));
+    assert!(string.contains(char::is_lowercase));
+
+    // starts_with / ends_with
+    // The [pattern] can be a &str, [char], a slice of [char]s, or a function or closure that determines if a character matches
+    assert!(string.starts_with('a'));
+    assert!(string.starts_with("ab"));
+    assert!(string.starts_with(char::is_lowercase));
+    assert!(string.ends_with('k'));
+    assert!(string.ends_with("ijk"));
+    assert!(string.ends_with(char::is_lowercase));
+
+    /* 位置匹配 */
+
+    // find / rfind
+    // 返回匹配到的第一个索引, find 从左往右扫描, rfind 从右到左扫描, 找的到返回 Some(idx), 找不到返回 None
+    // The [pattern] can be a &str, [char], a slice of [char]s, or a function or closure that determines if a character matches
+    assert!(string.find('🐶').is_some());
+    assert!(string.find("cd").is_some());
+    assert!(string.find(char::is_uppercase).is_none());
+    assert!(string.rfind('🐶').is_some());
+    assert!(string.rfind("cd").is_some());
+    assert!(string.rfind(char::is_uppercase).is_none());
+
+    /* 分割字符串 */
+    // split / rsplit
+    println!("{:?}", string1.split(' ').collect::<Vec<_>>()); // vec!["hello", "thank", "you", "thank", "you", "very", "much"]
+    println!("{:?}", string1.split(' ').collect::<Vec<_>>()); // vec!["hello", "thank", "you", "thank", "you", "very", "much"],
 }
