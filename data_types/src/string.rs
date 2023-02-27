@@ -233,9 +233,10 @@ pub fn delete_string() {
 pub fn search_string() {
     let string = "abcd🐶efgh🐶ijk";
     let string1: String = "hello thank you thank you very much".into();
+    let string2: String = "lion\ntiger\nleopard".into();
+    let string3: String = "2020-11-03 23:59".into();
 
     /* 存在性判断 */
-
     // contains
     // The [pattern] can be a &str, [char], a slice of [char]s, or a function or closure that determines if a character matches
     assert!(!string.contains('p'));
@@ -252,7 +253,6 @@ pub fn search_string() {
     assert!(string.ends_with(char::is_lowercase));
 
     /* 位置匹配 */
-
     // find / rfind
     // 返回匹配到的第一个索引, find 从左往右扫描, rfind 从右到左扫描, 找的到返回 Some(idx), 找不到返回 None
     // The [pattern] can be a &str, [char], a slice of [char]s, or a function or closure that determines if a character matches
@@ -266,5 +266,30 @@ pub fn search_string() {
     /* 分割字符串 */
     // split / rsplit
     println!("{:?}", string1.split(' ').collect::<Vec<_>>()); // vec!["hello", "thank", "you", "thank", "you", "very", "much"]
-    println!("{:?}", string1.split(' ').collect::<Vec<_>>()); // vec!["hello", "thank", "you", "thank", "you", "very", "much"],
+    println!("{:?}", string1.rsplit(' ').collect::<Vec<_>>()); // vec!["much", "very", "you", "thank", "you", "thank", "hello"]
+    println!("{:?}", string1.split(|ch| ch == ' ').collect::<Vec<_>>()); // vec!["hello", "thank", "you", "thank", "you", "very", "much"]
+    println!(
+        "{:?}",
+        string1.split(char::is_whitespace).collect::<Vec<_>>()
+    ); // vec!["hello", "thank", "you", "thank", "you", "very", "much"]
+    println!("{:?}", string2.split("\n").collect::<Vec<_>>()); // vec!["lion", "tiger", "leopard"]
+    println!("{:?}", string2.split("\n").collect::<Vec<_>>()); // vec!["lion", "tiger", "leopard"]
+    println!(
+        "{:?}",
+        string3.split(&['-', ' ', ':', '@']).collect::<Vec<_>>()
+    ); // vec!["2020", "11", "03", "23", "59"]
+
+    // split_terminator / rsplit_terminator
+    // 注意 split 和 split_terminator 的区别, split_terminator 可以把最后一个 pat 产生的空字符串去掉
+    println!("{:?}", "a b c ".split(' ').collect::<Vec<_>>()); // vec!["a", "b", "c", ""]
+    println!("{:?}", "a b c ".split_terminator(' ').collect::<Vec<_>>()); // vec!["a", "b", "c"]
+    println!("{:?}", "a b c ".rsplit_terminator(' ').collect::<Vec<_>>()); // vec!["c", "b", "a"]
+
+    // splitn / rsplitn
+    // 比 split 多了一个参数 n, 用于把原字符串按照 pat 分割成 n 份
+    println!("{:?}", string1.splitn(4, ' ').collect::<Vec<_>>()); // vec!["hello", "thank", "you", "thank you very much"]
+    println!("{:?}", string1.rsplitn(4, ' ').collect::<Vec<_>>()); // vec!["much", "very", "you", "hello thank you thank"]
+
+    /* 捕获匹配 */
+    println!("{:?}", string1.matches("tha").collect::<Vec<_>>()); // vec!["hello", "thank", "you", "thank you very much"]
 }
