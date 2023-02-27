@@ -2,7 +2,7 @@
 
 | Logo                                                                                             | Ferris                                                                                        | Me                                                                                            |
 | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| <img src="https://edge.yancey.app/beg/6w9ggjnu-1677482302383.png" alt="rust-logo" height="160"/> | <img src="https://edge.yancey.app/beg/zrwdrsxd-1677482047553.png" alt="ferris" height="160"/> | <img src="https://edge.yancey.app/beg/ckk43ylh-1677482091462.jpg" alt="ferris" height="160"/> |
+| <img src="https://edge.yancey.app/beg/6w9ggjnu-1677482302383.png" alt="rust-logo" height="160"/> | <img src="https://edge.yancey.app/beg/zrwdrsxd-1677482047553.png" alt="ferris" height="160"/> | <img src="https://edge.yancey.app/beg/ckk43ylh-1677482091462.jpg" alt="me" height="160"/> |
 
 ## Rust 初衷
 
@@ -140,7 +140,7 @@ cargo watch -x run
 
 `cargo install` 安装的**是包不是库**, 它安装的是一个二进制的产物, 安装到 `/Users/XXX/.cargo/bin/` 底下, 有点类似于 `npm install -g xxx`.
 
-而你在 Cargon.toml 里安装的是库, 它是不能够使用 `cargo install` 的, 土鳖的办法是手动填写依赖和版本, 但实在太 low 了, 使用 [cargo-edit](https://crates.io/crates/cargo-edit) 可以解决这个问题.
+而你在 Cargo.toml 里安装的是库, 它是不能够使用 `cargo install` 的, 土鳖的办法是手动填写依赖和版本, 但实在太 low 了, 使用 [cargo-edit](https://crates.io/crates/cargo-edit) 可以解决这个问题.
 
 ```bash
 cargo install cargo-edit
@@ -169,9 +169,9 @@ cargo add regex
   - [enums](./enums/src/main.rs)
   - [match_control_flow_operator](./enums/src/match_control_flow_operator.rs)
 - 常见集合
-  - [vector](./collections/src/vector.rs)
-  - [string](./collections/src/string.rs)
-  - [hashmap](./collections/src/hashmap.rs)
+  - [vector](./std_library/src/collections/src/vector.rs)
+  - [string](./std_library/collections/src/string.rs)
+  - [hashmap](./std_library/collections/src/hashmap.rs)
 - 错误处理
   - [recoverable_errors_with_result](./error_handling/src/recoverable_errors_with_result.rs)
   - [unrecoverable_errors_with_panic](./error_handling/src/unrecoverable_errors_with_panic.rs)

@@ -194,14 +194,10 @@ trait PerPage {
 struct MyPaginate;
 
 impl Page for MyPaginate {
-    fn set_page(&self) -> () {
-        todo!()
-    }
+    fn set_page(&self) -> () {}
 }
 impl PerPage for MyPaginate {
-    fn set_per_page(&self) -> () {
-        todo!()
-    }
+    fn set_per_page(&self) -> () {}
 }
 
 // 继承 trait
@@ -211,9 +207,7 @@ trait Paginate: Page + PerPage {
 
 // 实现 trait
 impl<T: Page + PerPage> Paginate for T {
-    fn set_skip_page(&self) -> () {
-        todo!()
-    }
+    fn set_skip_page(&self) -> () {}
 }
 
 /// 泛型约束
