@@ -9,7 +9,6 @@
 //! 很多编程语言提供了自己特殊的线程实现, 编程语言提供的线程被称为绿色(green)线程,
 //! 使用绿色线程的语言会在不同数量的 OS 线程的上下文中执行它们. 为此, 绿色线程模式
 //! 被称为 M:N 模型: M 个绿色线程对应 N 个 OS 线程, 这里 M 和 N 不必相同.
-use std::ops::Deref;
 use std::rc::Rc;
 use std::thread;
 use std::time::Duration;
