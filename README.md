@@ -1,8 +1,8 @@
 # Learn Rust
 
-| Logo                                                                        | Ferris                                                            | Me                                                            |
-| --------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- |
-| <img src="./public/assets/rust-logo-blk.svg" alt="rust-logo" height="160"/> | <img src="./public/assets/ferris.png" alt="ferris" height="160"/> | <img src="./public/assets/me.jpg" alt="ferris" height="160"/> |
+| Logo                                                                                             | Ferris                                                                                        | Me                                                                                            |
+| ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| <img src="https://edge.yancey.app/beg/6w9ggjnu-1677482302383.png" alt="rust-logo" height="160"/> | <img src="https://edge.yancey.app/beg/zrwdrsxd-1677482047553.png" alt="ferris" height="160"/> | <img src="https://edge.yancey.app/beg/ckk43ylh-1677482091462.jpg" alt="ferris" height="160"/> |
 
 ## Rust 初衷
 
@@ -14,11 +14,16 @@
 - 不需要有垃圾回收这样的系统, 不能为了内存安全而引入性能负担;
 - 不是一门仅仅拥有一个主要特性的语言, 而应该拥有一系列的广泛特性, 这些特性之间又不乏一致性. 这些特性可以很好地相互协作, 从而使该语言更容易编写, 维护和调试, 让程序员写出更安全, 更高效的代码.
 
-## 类型系统的分类
+## Rust 类型系统
+
+Rust 是一门强类型且类型安全的静态语言. Rust 中一切皆表达式, 表达式皆有值, 值皆有类型. 所以可以说, Rust 中一切皆类型. 除了一些基本的原生类型和复合类型, Rust 把作用域也纳入了类型系统(生命周期系统).
+为了安全, Rust 囊括了编程中会遇到的各种情况, 如 `Option<T>`, `Result<T, E>`, `never` 类型.
+
+### 类型系统的分类
 
 在编译期进行类型检查的语言属于**静态类型**, 在运行期进行类型检查的语言属于**动态类型**. 如果一门语言不允许类型的自动隐式转换, 在强制转换前不同类型无法进行计算, 则该语言属于**强类型**, 反之则属于**弱类型**.
 
-## 多态性与类型系统
+### 多态性与类型系统
 
 对象是什么样的类型, 决定了它有什么样的行为; 反过来, 对象在不同上下文中的行为, 也决定了它的类型. 这称为**多态性**. 如果一个类型系统允许一段代码在不同的上下文中具有不同的类型, 这样的类型系统就叫作多态类型系统. 对于静态类型的语言来说, 多态性的好处是可以在不影响类型丰富的前提下, 为不同的类型编写通用的代码.
 
@@ -32,7 +37,7 @@
 
 Rust 中的类型系统目前只支持参数化多态和 Ad-hoc 多态, 也就是泛型和 trait.
 
-## 零成本抽象
+### 零成本抽象
 
 | In general, C++ implementations obey the zero-overhead principle: What you don’t use, you don‘t pay for. And further: What you do use, you couldn’t hand code any better.
 |
@@ -51,12 +56,7 @@ Rust 中的类型系统目前只支持参数化多态和 Ad-hoc 多态, 也就�
 - **Async/await 和 Future**. Futures API 是一个重要的例子, 因为早期版本的 futures 在零成本抽象的"零成本"部分做得非常好, 但实际上并没有提供足够好的用户体验来吸引用户采用. 通过增加 pining 支持 async/await, 跨 await 的引用等等, 我们做了一个真的可以解决用户的问题的产品, 让 Rust 更适合编写高性能的网络服务.
 - **Unsafe 和模块边界**. 在所有这些, 以及 Rust 的每一个成功案例的背后, 都是不安全块和隐私的概念, 让我们可以侵入到原始指针操作中去构建这些零成本的抽象. 如果没有这种真正根本性的能力, 任何一个 Rust 的辉煌成就都是不可能实现的, 因为我们可以在本地环境打破规则, 将系统扩展到类型检查器所能处理的范围之外. 这就是零成本抽象, 它是 Rust 中所有其他零成本抽象的基础.
 
-## Rust 类型系统
-
-Rust 是一门强类型且类型安全的静态语言. Rust 中一切皆表达式, 表达式皆有值, 值皆有类型. 所以可以说, Rust 中一切皆类型. 除了一些基本的原生类型和复合类型, Rust 把作用域也纳入了类型系统(生命周期系统).
-为了安全, Rust 囊括了编程中会遇到的各种情况, 如 `Option<T>`, `Result<T, E>`, `never` 类型.
-
-## Rust 的类型大小
+### Rust 的类型大小
 
 编程语言中不同的类型本质上是内存占用空间和编码方式的不同, Rust 也不例外. Rust 中没有 GC, 内存首先由编译器来分配, Rust 代码被编译为 LLVM IR, 其中携带了内存分配的信息. 所以编译器需要事先知道类型的大小, 才能分配合理的内存.
 
@@ -71,6 +71,8 @@ Rust 中绝大部分类型都是在编译期可确定大小的类型(Sized Type)
 ### 虚拟内存
 
 现代操作系统在保护模式下都采用虚拟内存管理栈术. 虚拟内存是一种对物理存储设备的统一抽象, 其中物理在储设备包括物理内存, 磁盘, 寄存器, 高速缓存等. 这样统一抽象的好处是, 方便同时运行多道程序, 使得每个进程都有各自独立的进程地址空间, 并且可以通过操作系统调度将外存当作内存来使用. 这就引出了一个新的概念: **虚拟地址空间**.
+
+虚拟地址空间是线性空间, 用户所接触到的地址都是虚拟地址, 而不是真实的物理地址. 利用这种虚拟地址不但能保护操作系统, 让进程在各自的地址空间内操作内存, 更重要的是, 用户程序可以使用比物理内存更大的地址空间. 虚拟地址空间被人为地分为两部分: 用户空间和内核空间, 它们的比例是 3:1(Linux 系统中)或 2:2(Windows 系统中). 以 Linux 系统为例, 32 位计算机的地址空间大小是 4GB, 寻址范围是 OxOOOOOOOO-OxFFFFFFFF. 然后通过内存分页等底层复杂的机制来把虚拟地址翻译为物理地址.
 
 如下是 Linux 系统中的虚拟地址空间示意图, 其中栈内存由高地址向低地址变化, 即随着入栈, 地址的十六进制数是减小的; 而堆内存则相反, 是由低地址向高地址, 这样的设计是为了更加有效地利用内存.
 
@@ -90,7 +92,7 @@ Rust 中绝大部分类型都是在编译期可确定大小的类型(Sized Type)
 - 临时变量, 包括函数内部的非静态局部变量和编译器产生的临时变量;
 - 保存的上下文.
 
-## 内存安全
+### 内存安全
 
 只有当程序访问未定义内存的时候才会产生内存错误. 一般来说, 发生以下几种情况就会产生内存错误:
 
@@ -105,7 +107,7 @@ Rust 中绝大部分类型都是在编译期可确定大小的类型(Sized Type)
 - **所有权系统**: 每个被分配的内存都有一个独占其所有权的指针. 只有当该指针被销毁时, 其对应的内存才能随之被释放.
 - **借用和生命周期**: 每个变量都有其生命周期, 一旦超出生命周期, 变量就会被自动释放. 如果是借用, 则可以通过标记生命周期参数供编译器检查的方式, 防止出现悬垂指针, 也就是释放后使用的情况.
 
-## Rust 编译概览
+## Rust 编译原理概览
 
 Rust 是跨平台语言, 一次编译, 到处运行, 这得益于 LLVM. Rust 编译器是一个 LLVM 编译前端, 它将代码编译为 LLVM IR, 然后经过 LLVM 编译为相应的平台目标.
 
@@ -117,29 +119,38 @@ Rust 源码经过分词和解析, 生成 AST. 然后把 AST 进一步简化处�
 
 最终, MIR 会被翻译为 LLVM IR, 然后被 LLVM 的处理编译为能在各个平台上运行的目标机器码.
 
-## Available Scripts
+## Cargo 命令一览
 
 - `cargo fmt`: 自动格式化
 - `cargo fix`: 自动修复代码
 - `cargo clippy`: 更严格的 lint
 
-## Recipe
+## 好用的三方包和库
 
-### 热更新
+### 监听代码变化
+
+毕竟写前端出身的, 没有热更新可受不了, 虽然后端项目没有热更新一说, 但代码改了之后能够自动重启多少也是一件省力的事情, 可以安装 [cargo-watch](https://crates.io/crates/cargo-watch)
 
 ```bash
 cargo install cargo-watch
 cargo watch -x run
 ```
 
+### 深入 cargo install
+
+`cargo install` 安装的**是包不是库**, 它安装的是一个二进制的产物, 安装到 `/Users/XXX/.cargo/bin/` 底下, 有点类似于 `npm install -g xxx`.
+
+而你在 Cargon.toml 里安装的是库, 它是不能够使用 `cargo install` 的, 土鳖的办法是手动填写依赖和版本, 但实在太 low 了, 使用 [cargo-edit](https://crates.io/crates/cargo-edit) 可以解决这个问题.
+
+```bash
+cargo install cargo-edit
+
+# 它扩展了 cargo, 后续可以优雅的使用如下命令来安装库
+cargo add regex
+```
+
 ## Menu
 
-- 入门指南
-  - [hello_world](./hello_world)
-  - [hello_cargo](./hello_cargo)
-- 猜猜看游戏
-  - [guessing_game](./guessing_game/src/main.rs)
-  - [guessing_game_with_comments](./guessing_game/src/dev.rs)
 - 常见编程概念
   - [variables_and_mutability](./variables_and_mutability)
   - [data_types](./data_types)
@@ -157,9 +168,6 @@ cargo watch -x run
 - 枚举和模式匹配
   - [enums](./enums/src/main.rs)
   - [match_control_flow_operator](./enums/src/match_control_flow_operator.rs)
-- 使用包, Crate 和模块管理不断增长的项目
-  - [lib](./restaurant/src/lib.rs)
-  - [pub_struct](./restaurant/src/use_struct.rs)
 - 常见集合
   - [vector](./collections/src/vector.rs)
   - [string](./collections/src/string.rs)
@@ -175,15 +183,9 @@ cargo watch -x run
   - [how_to_write_tests](./writing_automated_tests/src/how_to_write_tests.rs)
   - [how_to_run_tests](./writing_automated_tests/src/how_to_run_tests.rs)
   - [how_to_organize_tests_files](./writing_automated_tests/src/how_to_organize_tests_files.rs)
-- 一个 I/O 项目: 构建一个命令行程序
-  - [main](./minigrep/src/main.rs)
-  - [lib](./minigrep/src/lib.rs)
 - Rust 中的函数式语言功能: 迭代器与闭包
   - [iterators](./iterators_closures/src/iterators.rs)
   - [closures](./iterators_closures/src/closures.rs)
-- 更多关于 Cargo 和 Crates.io 的内容
-  - [more_command_of_cargo](./more_about_cargo)
-  - [workspace](./workspace)
 - 智能指针
   - [box_pointer](./smart_pointers/src/box_pointer.rs)
   - [deref_trait](./smart_pointers/src/deref_trait.rs)
@@ -208,9 +210,6 @@ cargo watch -x run
   - [advanced_types](./advanced_features/src/advanced_types.rs)
   - [advanced_functions_and_closures](./advanced_features/src/advanced_functions_and_closures.rs)
   - [macros](./advanced_features/src/macros.rs)
-- 带线程池的 Web Server
-  - [main](./web_server/src/main.rs)
-  - [lib](./web_server/src/lib.rs)
 
 ## License
 
