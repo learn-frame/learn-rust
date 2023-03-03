@@ -22,7 +22,7 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use List::{Cons, Nil};
+use List::{Node, Nil};
 
 pub fn entry() {
     use_rc_and_refcell();
@@ -147,7 +147,7 @@ mod tests {
 // 如果有一个储存了 RefCell<T> 的 Rc<T> 的话, 就可以得到有多个所有者并且可以修改的值了
 #[derive(Debug)]
 pub enum List {
-    Cons(Rc<RefCell<i32>>, Rc<List>),
+    Node(Rc<RefCell<i32>>, Rc<List>),
     Nil,
 }
 
@@ -155,11 +155,11 @@ fn use_rc_and_refcell() {
     // 里创建了一个 Rc<RefCell<i32>> 实例并储存在变量 value 中以便之后直接访问
     let value = Rc::new(RefCell::new(5));
 
-    // 接着在 a 中用包含 value 的 Cons 成员创建了一个 List. 需要克隆 value 以便 a 和 value 都能拥有其内部值 5 的所有权,
+    // 接着在 a 中用包含 value 的 Node 成员创建了一个 List. 需要克隆 value 以便 a 和 value 都能拥有其内部值 5 的所有权,
     // 而不是将所有权从 value 移动到 a 或者让 a 借用 value
-    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
-    let b = Cons(Rc::new(RefCell::new(6)), Rc::clone(&a));
-    let c = Cons(Rc::new(RefCell::new(10)), Rc::clone(&a));
+    let a = Rc::new(Node(Rc::clone(&value), Rc::new(Nil)));
+    let b = Node(Rc::new(RefCell::new(6)), Rc::clone(&a));
+    let c = Node(Rc::new(RefCell::new(10)), Rc::clone(&a));
 
     // 可以修改值
     // 通过使用 RefCell<T>, 我们可以拥有一个表面上不可变的 List,
@@ -167,7 +167,7 @@ fn use_rc_and_refcell() {
     // RefCell<T> 的运行时借用规则检查也确实保护我们免于出现数据竞争
     *value.borrow_mut() += 10;
 
-    println!("a after = {:?}", a); // a after = Cons(RefCell { value: 15 }, Nil)
-    println!("b after = {:?}", b); // b after = Cons(RefCell { value: 6 }, Cons(RefCell { value: 15 }, Nil))
-    println!("c after = {:?}", c); // c after = Cons(RefCell { value: 10 }, Cons(RefCell { value: 15 }, Nil))
+    println!("a after = {:?}", a); // a after = Node(RefCell { value: 15 }, Nil)
+    println!("b after = {:?}", b); // b after = Node(RefCell { value: 6 }, Node(RefCell { value: 15 }, Nil))
+    println!("c after = {:?}", c); // c after = Node(RefCell { value: 10 }, Node(RefCell { value: 15 }, Nil))
 }

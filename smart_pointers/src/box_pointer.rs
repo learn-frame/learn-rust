@@ -10,7 +10,7 @@
 //! 当有大量数据并希望在确保数据不被拷贝的情况下转移所有权的时候
 //! 当希望拥有一个值并只关心它的类型是否实现了特定 trait 而不是其具体类型的时候
 //!
-use List::{Cons, Nil};
+use List::{Node, Nil};
 
 pub fn entry() {
     // 在堆上存储一个 i32
@@ -42,11 +42,11 @@ pub fn fibonacci(n: u32) -> u32 {
 #[derive(Debug)]
 #[allow(unused)]
 pub enum List {
-    Cons(i32, Box<List>),
+    Node(i32, Box<List>),
     Nil,
 }
 
 fn make_list() {
-    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+    let list = Node(1, Box::new(Node(2, Box::new(Node(3, Box::new(Nil))))));
     println!("{:?}", list);
 }

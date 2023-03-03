@@ -7,7 +7,7 @@
 //! 而 Drop 除了释放内存, Dro p还可以做很多其他的工作, 比如释放文件和网络连接
 
 pub fn entry() {
-    cunstom_drop();
+    custom_drop();
 }
 
 #[derive(Debug)]
@@ -23,7 +23,7 @@ impl Drop for CustomSmartPointer {
 
 // 实例离开作用域 Rust 会自动调用 drop, 并调用我们指定的代码.
 // 变量以被创建时相反的顺序被丢弃, 所以 d 在 c 之前被丢弃
-fn cunstom_drop() {
+fn custom_drop() {
     #[allow(unused)]
     let c = CustomSmartPointer {
         data: String::from("my stuff"),
