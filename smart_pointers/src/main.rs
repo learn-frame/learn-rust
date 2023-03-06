@@ -13,12 +13,13 @@
 //! 这样就可以编写既用于引用, 又用于智能指针的代码. Drop trait 允许我们自定义当智能指针离开作用域时(对象即将消亡之时)运行的代码(drop 方法)
 //!
 //! 如下是一些常见的智能指针:
-//! Box<T>, 用于在堆上分配值
-//! Rc<T>, 一个引用计数类型, 其数据可以有多个所有者
-//! Ref<T> 和 RefMut<T>, 通过 RefCell<T> 访问. (RefCell<T> 是一个在运行时而不是在编译时执行借用规则的类型)
+//! Box<T>, 用于在堆上分配值, 允许在编译时执行不可变或可变借用检查
+//! Rc<T>, 一个引用计数类型, 允许相同数据有多个所有者, 仅允许在编译时执行不可变借用检查
+//! Ref<T> 和 RefMut<T>, 通过 RefCell<T> 访问, 允许在运行时执行不可变或可变借用检查
 //!
 
 pub mod box_pointer;
+pub mod cow_pointer;
 pub mod deref_trait;
 pub mod drop_trait;
 pub mod rc_pointer;
@@ -31,5 +32,6 @@ fn main() {
     drop_trait::entry();
     rc_pointer::entry();
     refcell_pointer_and_interior_mutability::entry();
+    cow_pointer::entry();
     reference_cycles::entry();
 }

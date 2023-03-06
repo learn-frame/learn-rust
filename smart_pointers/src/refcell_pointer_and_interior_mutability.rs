@@ -1,31 +1,73 @@
 //! 内部可变性(Interior mutability)是 Rust 中的一个设计模式, 它允许你即使在有不可变引用时也可以改变数据,
 //! 这通常是借用规则所不允许的. 为了改变数据, 该模式在数据结构中使用 unsafe 代码来模糊 Rust 通常的可变性和借用规则
-//! TODO: 第十九章会讲到不安全代码
 //!
-//! 不同于 Rc<T>, RefCell<T> 代表其数据的唯一的所有权
-//!
-//! 回顾一下借用规则:
-//! 1. 在任意给定时刻, 只能拥有一个可变引用或任意数量的不可变引用之一(而不是两者)
-//! 2. 引用必须总是有效的.
-//!
-//! 对于引用和 Box<T>, 借用规则的不可变性作用于编译时. 对于 RefCell<T>, 这些不可变性作用于运行时.
-//! 对于引用, 如果违反这些规则, 会得到一个编译错误. 而对于 RefCell<T>, 如果违反这些规则程序会 panic 并退出
-//!
-//! RefCell<T> 正是用于当你确信代码遵守借用规则, 而编译器不能理解和确定的时候.
-//!
-//! 类似于 Rc<T>, RefCell<T> 只能用于单线程场景.
-//! 如果尝试在多线程上下文中使用 RefCell<T>, 会得到一个编译错误. TODO: 第十六章会介绍如何在多线程程序中使用 RefCell<T> 的功能.
-//!
-//! Rc<T> 允许相同数据有多个所有者; Box<T> 和 RefCell<T> 有单一所有者.
-//! Box<T> 允许在编译时执行不可变或可变借用检查; Rc<T>仅允许在编译时执行不可变借用检查; RefCell<T> 允许在运行时执行不可变或可变借用检查.
-//! 因为 RefCell<T> 允许在运行时执行可变借用检查, 所以我们可以在即便 RefCell<T> 自身是不可变的情况下修改其内部的值. 在不可变值内部改变值就是"内部可变性"模式
+//! Rust 中的可变或不可变主要是针对一个变量绑定而言的, 比如对于结构体来说, 可变或不可变只能对其实例进行设置, 而不能设置单个成员的可变性.
+//! Rust 提供了 Cel<T> 和 RefCell<T> 来应对这种情况
 
-use std::cell::RefCell;
+use std::borrow::Borrow;
+use std::cell::{Cell, RefCell};
 use std::rc::Rc;
-use List::{Node, Nil};
+use List::{Nil, Node};
 
 pub fn entry() {
+    learn_cell();
+    learn_refcell();
     use_rc_and_refcell();
+    can_not_modify_a_refrence();
+}
+
+#[allow(unused)]
+#[derive(Debug)]
+struct Point {
+    x: Cell<i32>,
+    y: Cell<i32>,
+    desc: RefCell<String>,
+}
+
+/// 对于复制类型的变量, 可以使用 Cell 进行修改
+///
+/// 使用 Cell<T> 虽然没有运行时开销, 但是尽量不要用它包裹大的结构体
+/// 因为 Cell<T> 内部每次 get/set 都会执行一次按位复制
+fn learn_cell() {
+    let p = Point {
+        x: Cell::new(1),
+        y: Cell::new(1),
+        desc: RefCell::new(String::from("(1, 1)")),
+    };
+
+    assert_eq!(Cell::new(1), p.x);
+    assert_eq!(1, p.x.get());
+
+    p.x.set(2);
+    assert_eq!(p.x, Cell::new(2));
+}
+
+/// 对于没有实现 Copy 的类型, 可以使用 RefCell 进行修改
+///
+/// 以 Point 为例, 如果 desc 是 Cell<String>, 由于 String 不是复制类型导致无法 Debug:
+/// the trait bound `String: Copy` is not satisfied
+/// the trait `Debug` is implemented for `Cell<T>`
+/// required for `Cell<String>` to implement `Debug`
+///
+/// RefCell<T>需要在运行时执行借用检查, 所以有运行时开销, 一旦发现违反借用规则的情况, 则会引发线
+/// 程 panic 而退出当前线程
+fn learn_refcell() {
+    let p = Point {
+        x: Cell::new(1),
+        y: Cell::new(1),
+        desc: RefCell::new(String::from("(1, 1)")),
+    };
+
+    let mut desc = p.desc.borrow_mut();
+    desc.clear();
+    desc.push_str("(0, 0)");
+    println!("{:?}", desc.borrow()); // "(0, 0)"
+
+    //  😈: 'already borrowed: BorrowMutError'. 因为上面已经有 desc 获取过可变借用了
+    // 下面再想借用就报错了(不管是 borrow 还是 borrow_mut 都不行)
+    // 这个错误在编译器不会被发现, 但在运行时会有一个借用检查器来检查
+    // let mut x = p.desc.borrow_mut();
+    // let y = p.desc.borrow();
 }
 
 pub fn can_not_modify_a_refrence() {
