@@ -6,7 +6,7 @@
 
 // impl Trait for Type
 // 为 Type 实现 Trait 接口
-use std::fmt::{Display, Formatter, Result};
+use std::fmt::{Debug, Display, Formatter, Result};
 use std::ops::Add;
 
 pub fn entry() {
@@ -54,6 +54,8 @@ pub fn entry() {
     OutlinePrint::outline_print(&Points { x: 1, y: 2 });
 
     use_new_type();
+
+    higher_ranked_trait_bounds(1_usize);
 }
 
 pub trait Summary {
@@ -73,7 +75,7 @@ pub trait Clone {
     fn copy(&self) -> String;
 }
 
-pub trait Debug {
+pub trait CustomDebug {
     fn show_bug(&self) -> String;
 }
 
@@ -84,6 +86,7 @@ pub struct NewsArticle {
     pub content: String,
 }
 
+// self 为结构体 NewsArticle 的任意实例, &self 则为实例的引用
 impl Summary for NewsArticle {
     fn summarize(&self) -> String {
         format!("{}, by {} ({})", self.headline, self.author, self.location)
@@ -128,14 +131,14 @@ pub fn use_trait_bound_as_params_2<T: Summary + Displayed>(item: T) {}
 
 // 如果像这种很复杂的
 #[allow(unused)]
-fn some_function<T: Displayed + Clone, U: Clone + Debug>(t: T, u: U) {}
+fn some_function<T: Displayed + Clone, U: Clone + CustomDebug>(t: T, u: U) {}
 
 // 可以用 where 语法
 #[allow(unused)]
 fn some_function_1<T, U>(t: T, u: U)
 where
     T: Displayed + Clone,
-    U: Clone + Debug,
+    U: Clone + CustomDebug,
 {
 }
 
@@ -241,14 +244,14 @@ pub fn add<T: Add<Output = T>>(a: T, b: T) -> T {
 
 // 如果像这种很复杂的
 #[allow(unused)]
-fn some_function_2<T: Displayed + Clone, U: Clone + Debug>(t: T, u: U) {}
+fn some_function_2<T: Displayed + Clone, U: Clone + CustomDebug>(t: T, u: U) {}
 
 // 可以用 where 语法
 #[allow(unused)]
 fn some_function_3<T, U>(t: T, u: U)
 where
     T: Displayed + Clone,
-    U: Clone + Debug,
+    U: Clone + CustomDebug,
 {
 }
 
@@ -493,4 +496,37 @@ impl Display for Wrapper {
 fn use_new_type() {
     let w = Wrapper(vec![String::from("hello"), String::from("world")]);
     println!("w = {}", w);
+}
+
+// 高阶生命周期
+trait DoSomething<T>
+where
+    T: Debug,
+{
+    fn do_something(&self, any_val: T) -> ();
+}
+
+impl<T> DoSomething<T> for usize
+where
+    T: Debug,
+{
+    fn do_something(&self, any_val: T) -> () {
+        println!("{:?}", any_val);
+    }
+}
+
+/// 😈: s 在 higher_ranked_trait_bounds 函数调用结束后被析构了
+/// 但 s 的引用却被 d 的某个方法引用着, 就不符合生命周期规则了
+/// ```
+/// fn higher_ranked_trait_bounds<'a>(d: impl DoSomething<&'a usize>) {
+///     let s: usize = 1;
+///     d.do_something(&s);
+/// }
+/// ```
+///
+/// 其实明眼人能看出来, 上面的 'a, 是把 higher_ranked_trait_bounds 函数跟内部 s 变量的生命周期绑定在一起了
+/// 但其实应该把 s 跟 DoSomething Trait 中的方法们绑定起来才行
+fn higher_ranked_trait_bounds(d: impl for<'a> DoSomething<&'a usize>) {
+    let s: usize = 1;
+    d.do_something(&s);
 }
