@@ -499,6 +499,8 @@ fn use_new_type() {
 }
 
 // 高阶生命周期
+// 编译器按高阶生命周期来自动补齐闭包参数中的生命周期参数
+// 非闭包情况还得自己标注才行
 trait DoSomething<T>
 where
     T: Debug,

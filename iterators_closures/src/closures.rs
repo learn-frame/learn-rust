@@ -372,12 +372,12 @@ fn use_trait_bound_closure() {
 
     // any 的参数可以是个闭包
     let b = v.any(|x| x > 3);
-    assert!(!b);
+    assert!(b);
 
     // any 的参数也可以是一个函数指针
     fn c(x: u32) -> bool {
         x > 3
     }
     let d = v.any(c);
-    assert!(!d);
+    assert!(d);
 }
