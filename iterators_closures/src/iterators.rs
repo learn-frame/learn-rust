@@ -79,7 +79,7 @@ fn size_hint() {
     iter.next();
     assert_eq!((0, Some(0)), iter.size_hint());
 
-    // size hint的目的就是优化迭代器, 如果事先知道准确的迭代器长度,
+    // size hint 的目的就是优化迭代器, 如果事先知道准确的迭代器长度,
     // 就可以做到精准地扩展容器容量, 从而避免不必要的容量检查, 提高性能
 
     // 比如 String 有个 extends 方法, 它传入一个迭代器,
@@ -102,6 +102,46 @@ fn size_hint() {
 
 /// Intolterator 和 Fromlterator
 /// Fromlterator 可以从迭代器转换为指定类型, 而 Intolterator 可以从指定类型转换为迭代器
+///
+/// - Intolter, 转移所有权, 对应 self.
+/// - Iter, 获得不可变借用, 对应 &self.
+/// - IterMut, 获得可变借用, 对应 &mut self.
+// pub trait IntoIterator {
+//     type Item;
+//     type IntoIter: Iterator<Item = Self::Item>;
+//     fn into_iter(self) -> Self::IntoIter;
+// }
+//
+// pub trait FromIterator<A>: Sized {
+//     fn from_iter<T: IntoIterator<Item = A>>(iter: T) -> Self;
+// }
+
+/// 迭代器适配器(也叫包装器)
+/// 适配器模式: 将一个接口转换成所需的另一个接口
+///
+/// - **Map**, 通过对原始注代器中的每个元素调用指定闭包来产生一个新的迭代器.
+/// - **Chain**, 通过连接两个迭代器来创建一个新的迭代器.
+/// - **Cloned**, 通过拷贝原始迭代器中全部元素来创建新的迭代器.
+/// - **Cycle**, 创建一个永远循环迭代的迭代器, 当迭代完毕后, 再返回第一个元素开始迭代.
+/// - **Enumerate**, 创建一个包含计数的迭代器, 它会返回 一个元组(i, val), 其中 i 是 usize 类型, 为迭代的当前索引, val 是迭代器返回的值.
+/// - **Filter**, 创建一个基于谓词判断式(predicate, 产生布尔值的表达式)过滤元素的迭代器.
+/// - **FlatMap**, 创建一个类似 Map 的结构的迭代器, 但是其中不会含有任何嵌套.
+/// - **FilterMap**, 相当于 Filter 和 Map 两个迭代器依次使用后的效果.
+/// - **Fuse**, 创建一个可以快速结束遍历的迭代器. 在遍历迭代器时, 只要返回过一次 None, 那么之后所有的遍历结果都为 None. 该迭代器适配器可以用于优化.
+/// - **Rev**, 创建一个可以反向遍历的迭代器 .
+fn adapter() {
+    let v = [String::from("a"), String::from("b"), String::from("c")];
+    let iter = v.iter();
+    let iter = v.into_iter();
+
+    for i in v.iter() {
+
+    }
+
+    for i in v.into_iter() {
+        
+    }
+}
 
 // 和其他语言一样, 迭代器是惰性的, 这意味着在调用方法使用迭代器之前它都不会有效果
 pub fn create_and_consume_iterator() {
