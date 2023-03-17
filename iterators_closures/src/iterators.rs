@@ -134,6 +134,7 @@ fn size_hint() {
 fn adapter() {
     let v = vec![1, 2, 3];
     let v1 = vec!["a".to_string(), "b".to_string(), "c".to_string()];
+    let v2 = vec![[0, 0], [1, 1], [2, 2]];
 
     let map = v.iter().map(|x| x * 2).collect::<Vec<i32>>();
     assert_eq!(vec![2, 4, 6], map);
@@ -142,10 +143,11 @@ fn adapter() {
     assert_eq!(vec![1, 2, 3, 1, 2, 3], chain);
 
     // copied 仅用于复制语义
-    let copied =v.iter().copied().collect::<Vec<i32>>();
+    let copied = v.iter().copied().collect::<Vec<i32>>();
+    assert_eq!(v, copied);
+
     // cloned 可用于复制语义和移动语义
     let cloned = v1.iter().cloned().collect::<Vec<String>>();
-    assert_eq!(v, copied);
     assert_eq!(v1, cloned);
 
     let mut cycle = v.iter().cycle();
@@ -161,6 +163,13 @@ fn adapter() {
 
     let filter = v.iter().filter(|x| x.is_negative()).collect::<Vec<&i32>>();
     assert_eq!(vec![] as Vec<&i32>, filter);
+
+    let flat_map = v2
+        .iter()
+        .flat_map(|x| x)
+        .map(|x| x * 2)
+        .collect::<Vec<i32>>();
+    assert_eq!(vec![0, 0, 2, 2, 4, 4], flat_map);
 }
 
 /// Rust 中的迭代器都是惰性的, 也就是说, 它们不会自动发生遍历行为, 除非调用 next 方法去消费其中的数据
