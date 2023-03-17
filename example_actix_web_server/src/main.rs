@@ -1,7 +1,5 @@
-use std::thread;
-use std::time::Duration;
-
 use actix_cors::Cors;
+use actix_multipart::Multipart;
 use actix_web::{
     get, http::header, middleware, post, web, App, HttpResponse, HttpServer, Responder,
 };
@@ -13,8 +11,12 @@ use fake::{
     uuid::UUIDv4,
     Fake,
 };
+use futures::{StreamExt, TryStreamExt};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use std::io::prelude::*;
+use std::thread;
+use std::time::Duration;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct User {
@@ -106,6 +108,34 @@ async fn handle_like(req: web::Json<Like>) -> impl Responder {
     })
 }
 
+#[post("/upload")]
+async fn upload(mut payload: Multipart) -> impl Responder {
+    // iterate over multipart stream
+    while let Ok(Some(mut field)) = payload.try_next().await {
+        let content_disposition = field.content_disposition();
+        let filename = content_disposition.get_filename().unwrap().to_string();
+
+        // File::create is blocking operation, use threadpool
+        let mut f = web::block(|| std::fs::File::create(filename))
+            .await
+            .unwrap();
+
+        // Field in turn is stream of *Bytes* object
+        while let Some(chunk) = field.next().await {
+            let data = chunk.unwrap();
+            // filesystem operations are blocking, we have to use threadpool
+            f = web::block(move || {
+                let mut file = f.unwrap();
+                file.write_all(&data).map(|_| file)
+            })
+            .await
+            .unwrap();
+        }
+    }
+
+    HttpResponse::Ok().json(true)
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
@@ -116,8 +146,8 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(
                 Cors::default()
-                    .allowed_origin("http://127.0.0.1:3000")
-                    .allowed_methods(vec!["GET", "POST"])
+                    .allow_any_origin()
+                    .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
                     .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
                     .allowed_header(header::CONTENT_TYPE)
                     .supports_credentials()
@@ -130,6 +160,7 @@ async fn main() -> std::io::Result<()> {
             .service(create_user)
             .service(get_like)
             .service(handle_like)
+            .service(upload)
     })
     .bind(("127.0.0.1", 3002))?
     .run()

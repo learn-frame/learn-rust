@@ -3,6 +3,8 @@ pub fn entry() {
     create_and_consume_iterator();
     using_other_iterator_trait_methods();
     size_hint();
+    adapter();
+    consumer();
 }
 
 /// 迭代器, 本质就是实现了 Iterator Trait, for 循环就是其中一个语法糖
@@ -119,7 +121,7 @@ fn size_hint() {
 /// 迭代器适配器(也叫包装器)
 /// 适配器模式: 将一个接口转换成所需的另一个接口
 ///
-/// - **Map**, 通过对原始注代器中的每个元素调用指定闭包来产生一个新的迭代器.
+/// - **Map**, 通过对原始迭代器中的每个元素调用指定闭包来产生一个新的迭代器.
 /// - **Chain**, 通过连接两个迭代器来创建一个新的迭代器.
 /// - **Cloned**, 通过拷贝原始迭代器中全部元素来创建新的迭代器.
 /// - **Cycle**, 创建一个永远循环迭代的迭代器, 当迭代完毕后, 再返回第一个元素开始迭代.
@@ -130,18 +132,45 @@ fn size_hint() {
 /// - **Fuse**, 创建一个可以快速结束遍历的迭代器. 在遍历迭代器时, 只要返回过一次 None, 那么之后所有的遍历结果都为 None. 该迭代器适配器可以用于优化.
 /// - **Rev**, 创建一个可以反向遍历的迭代器 .
 fn adapter() {
-    let v = [String::from("a"), String::from("b"), String::from("c")];
-    let iter = v.iter();
-    let iter = v.into_iter();
+    let v = vec![1, 2, 3];
+    let v1 = vec!["a".to_string(), "b".to_string(), "c".to_string()];
 
-    for i in v.iter() {
+    let map = v.iter().map(|x| x * 2).collect::<Vec<i32>>();
+    assert_eq!(vec![2, 4, 6], map);
 
-    }
+    let chain = v.iter().chain(v.iter()).map(|x| *x).collect::<Vec<i32>>();
+    assert_eq!(vec![1, 2, 3, 1, 2, 3], chain);
 
-    for i in v.into_iter() {
-        
-    }
+    // copied 仅用于复制语义
+    let copied =v.iter().copied().collect::<Vec<i32>>();
+    // cloned 可用于复制语义和移动语义
+    let cloned = v1.iter().cloned().collect::<Vec<String>>();
+    assert_eq!(v, copied);
+    assert_eq!(v1, cloned);
+
+    let mut cycle = v.iter().cycle();
+    assert_eq!(Some(&1), cycle.next());
+    assert_eq!(Some(&2), cycle.next());
+    assert_eq!(Some(&3), cycle.next());
+    assert_eq!(Some(&1), cycle.next());
+    assert_eq!(Some(&2), cycle.next());
+    assert_eq!(Some(&3), cycle.next());
+
+    let enumerate = v.iter().enumerate().collect::<Vec<(usize, &i32)>>();
+    assert_eq!(vec![(0, &1), (1, &2), (2, &3)], enumerate);
+
+    let filter = v.iter().filter(|x| x.is_negative()).collect::<Vec<&i32>>();
+    assert_eq!(vec![] as Vec<&i32>, filter);
 }
+
+/// Rust 中的迭代器都是惰性的, 也就是说, 它们不会自动发生遍历行为, 除非调用 next 方法去消费其中的数据
+/// 最直接消费迭代器数据的方法就是使用 for 循环, 当然 Rust 也提供了其他方法, 叫做消费器(Consumer)
+/// - **any**, 可以查找容器中是否存在满足条件的元素.
+/// - **fold**, 来源于函数式编程语言. 该方法接收两个参数, 第一个为初始值, 第二个为带有两个参数的闭包.
+/// 其中闭包的第一个参数被称为累加器, 它会将闭包每次选代执行的结果进行累计, 并最终作为 fold 方法的返回值. 在其他语言中, 也被用作 `reduce` 或叫 `inject`.
+/// - **collect**, 专门用来将迭代器转换为指定的集合类型. 比如使用 `collect::<Vec<i32>>()` 这样的 turbofish
+/// 语法为其指定了类型, 最终迭代器就会被转换为 `Vec<i32>` 这样的数组. 因此, 它也被称为**收集器**.
+fn consumer() {}
 
 // 和其他语言一样, 迭代器是惰性的, 这意味着在调用方法使用迭代器之前它都不会有效果
 pub fn create_and_consume_iterator() {
