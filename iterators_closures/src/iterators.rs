@@ -136,20 +136,26 @@ fn adapter() {
     let v1 = vec!["a".to_string(), "b".to_string(), "c".to_string()];
     let v2 = vec![[0, 0], [1, 1], [2, 2]];
 
+    // map
     let map = v.iter().map(|x| x * 2).collect::<Vec<i32>>();
     assert_eq!(vec![2, 4, 6], map);
 
+    // chain
     let chain = v.iter().chain(v.iter()).map(|x| *x).collect::<Vec<i32>>();
     assert_eq!(vec![1, 2, 3, 1, 2, 3], chain);
 
-    // copied 仅用于复制语义
+    // copied: 仅用于复制语义
     let copied = v.iter().copied().collect::<Vec<i32>>();
     assert_eq!(v, copied);
 
-    // cloned 可用于复制语义和移动语义
+    // cloned: 可用于复制语义和移动语义
     let cloned = v1.iter().cloned().collect::<Vec<String>>();
     assert_eq!(v1, cloned);
 
+    let clone = v.iter().clone().collect::<Vec<&i32>>();
+    assert_eq!(vec![&1, &2, &3], clone);
+
+    // cycle
     let mut cycle = v.iter().cycle();
     assert_eq!(Some(&1), cycle.next());
     assert_eq!(Some(&2), cycle.next());
@@ -158,18 +164,92 @@ fn adapter() {
     assert_eq!(Some(&2), cycle.next());
     assert_eq!(Some(&3), cycle.next());
 
+    // enumerate
     let enumerate = v.iter().enumerate().collect::<Vec<(usize, &i32)>>();
     assert_eq!(vec![(0, &1), (1, &2), (2, &3)], enumerate);
 
-    let filter = v.iter().filter(|x| x.is_negative()).collect::<Vec<&i32>>();
-    assert_eq!(vec![] as Vec<&i32>, filter);
-
+    // flat_map
     let flat_map = v2
         .iter()
         .flat_map(|x| x)
         .map(|x| x * 2)
         .collect::<Vec<i32>>();
     assert_eq!(vec![0, 0, 2, 2, 4, 4], flat_map);
+
+    // flat
+    let flatten = v2.into_iter().flatten().collect::<Vec<i32>>();
+    assert_eq!(vec![0, 0, 1, 1, 2, 2], flatten);
+
+    // filter
+    let filter = v.iter().filter(|x| x.is_negative()).collect::<Vec<&i32>>();
+    assert_eq!(vec![] as Vec<&i32>, filter);
+
+    // filter_map: 闭包需要返回一个 Option 类型
+    let filter_map = v1
+        .iter()
+        .filter_map(|x| x.parse::<i32>().ok())
+        .collect::<Vec<i32>>();
+    assert_eq!(vec![] as Vec<i32>, filter_map);
+
+    // fuse: 当迭代器第一次返回 None, 后面都是 None, 用于性能优化
+    struct Alternate {
+        state: i32,
+    }
+    impl Iterator for Alternate {
+        type Item = i32;
+
+        fn next(&mut self) -> Option<i32> {
+            let val = self.state;
+            self.state = self.state + 1;
+
+            // if it's even, Some(i32), else None
+            if val % 2 == 0 {
+                Some(val)
+            } else {
+                None
+            }
+        }
+    }
+    let iter = Alternate { state: 0 };
+    let mut iter = iter.fuse();
+
+    assert_eq!(Some(0), iter.next());
+    assert_eq!(None, iter.next()); // 第二次由于返回 None, 后面的都被拒止了
+    assert_eq!(None, iter.next()); // None
+    assert_eq!(None, iter.next()); // None
+
+    // rev
+    let rev = v.iter().rev().map(|x| *x).collect::<Vec<i32>>();
+    assert_eq!(vec![3, 2, 1], rev); // None
+
+    // all
+    let all = v.iter().all(|x| *x > 0);
+    assert!(all);
+
+    // any
+    let any = v.iter().any(|x| *x > 2);
+    assert!(any);
+
+    // as_slice
+    let as_silce = v.iter().as_slice();
+    assert_eq!(&[1, 2, 3], as_silce);
+
+    // count
+    let mut iter = v.iter();
+    iter.next();
+    iter.next();
+    iter.next();
+    iter.next();
+    assert!(iter.len() == 0);
+    assert!(iter.count() == 0);
+
+    // find
+    let find = v.iter().find(|x| **x > 1);
+    assert_eq!(Some(&2), find);
+
+    // find_map
+    let find_map = v1.iter().find_map(|x| x.parse::<i32>().ok());
+    assert_eq!(None, find_map);
 }
 
 /// Rust 中的迭代器都是惰性的, 也就是说, 它们不会自动发生遍历行为, 除非调用 next 方法去消费其中的数据
