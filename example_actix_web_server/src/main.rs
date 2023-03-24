@@ -14,9 +14,8 @@ use fake::{
 use futures::{StreamExt, TryStreamExt};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
-use std::io::prelude::*;
-use std::thread;
 use std::time::Duration;
+use std::{io::Write, thread};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct User {
