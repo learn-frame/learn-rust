@@ -3,6 +3,8 @@ use actix_multipart::Multipart;
 use actix_web::{
     get, http::header, middleware, post, web, App, HttpResponse, HttpServer, Responder,
 };
+use actix_web_lab::sse;
+use dotenvy::dotenv;
 use fake::{
     faker::boolean::en::Boolean,
     faker::internet::en::{SafeEmail, Username},
@@ -13,9 +15,20 @@ use fake::{
 };
 use futures::{StreamExt, TryStreamExt};
 use rand::Rng;
+use rs_openai::{
+    chat::{ChatCompletionMessageRequestBuilder, CreateChatRequestBuilder, Role},
+    OpenAI,
+};
 use serde::{Deserialize, Serialize};
+use std::env::var;
 use std::time::Duration;
 use std::{io::Write, thread};
+
+#[derive(Serialize)]
+struct Message {
+    title: String,
+    body: String,
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 struct User {
@@ -135,11 +148,53 @@ async fn upload(mut payload: Multipart) -> impl Responder {
     HttpResponse::Ok().json(true)
 }
 
+#[get("/create_chat")]
+async fn create_chat() -> impl Responder {
+    let (tx, rx) = sse::channel(2048);
+
+    dotenv().ok();
+    let api_key = var("OPENAI_API_KEY").unwrap();
+    let client = OpenAI::new(&OpenAI {
+        api_key,
+        org_id: None,
+    });
+
+    let req = CreateChatRequestBuilder::default()
+        .model("gpt-3.5-turbo")
+        .messages(vec![ChatCompletionMessageRequestBuilder::default()
+            .role(Role::User)
+            .content("To Solve LeetCode's problem 81 in Rust.")
+            .build()
+            .unwrap()])
+        .stream(true)
+        .build()
+        .unwrap();
+
+    let mut count = 0;
+    let mut stream = client.chat().create_with_stream(&req).await.unwrap();
+    while let Some(response) = stream.next().await {
+        for choice in response.unwrap().choices {
+            if let Some(content) = choice.delta.content {
+                count += 1;
+                let _ = tx
+                    .send(
+                        sse::Data::new(content)
+                            .event("chat_msg")
+                            .id(count.to_string()),
+                    )
+                    .await;
+            }
+        }
+    }
+
+    rx.with_keep_alive(Duration::from_secs(1000000))
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:3002");
+    log::info!("starting HTTP server at http://localhost:10086");
 
     HttpServer::new(|| {
         App::new()
@@ -160,8 +215,9 @@ async fn main() -> std::io::Result<()> {
             .service(get_like)
             .service(handle_like)
             .service(upload)
+            .service(create_chat)
     })
-    .bind(("127.0.0.1", 3002))?
+    .bind(("127.0.0.1", 10086))?
     .run()
     .await
 }
