@@ -1,7 +1,7 @@
 use actix_cors::Cors;
 use actix_multipart::Multipart;
 use actix_web::{
-    get, http::header, middleware, post, web, App, HttpResponse, HttpServer, Responder,
+    get, http::header, middleware, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder,
 };
 use actix_web_lab::sse;
 use dotenvy::dotenv;
@@ -20,6 +20,7 @@ use rs_openai::{
     OpenAI,
 };
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use std::env::var;
 use std::time::Duration;
 use std::{io::Write, thread};
@@ -46,6 +47,12 @@ struct User {
 struct Like {
     like_count: i32,
     has_liked: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct Params {
+    q: String,
+    user_id: String,
 }
 
 fn generate_user() -> User {
@@ -149,8 +156,10 @@ async fn upload(mut payload: Multipart) -> impl Responder {
 }
 
 #[get("/create_chat")]
-async fn create_chat() -> impl Responder {
-    let (tx, rx) = sse::channel(2048);
+async fn create_chat(req: HttpRequest) -> impl Responder {
+    let params = web::Query::<Params>::from_query(req.query_string()).unwrap();
+
+    let (tx, rx) = sse::channel(1024);
 
     dotenv().ok();
     let api_key = var("OPENAI_API_KEY").unwrap();
@@ -163,31 +172,47 @@ async fn create_chat() -> impl Responder {
         .model("gpt-3.5-turbo")
         .messages(vec![ChatCompletionMessageRequestBuilder::default()
             .role(Role::User)
-            .content("To Solve LeetCode's problem 81 in Rust.")
+            .content(&params.q)
             .build()
             .unwrap()])
         .stream(true)
+        .user(&params.user_id)
         .build()
         .unwrap();
 
     let mut count = 0;
     let mut stream = client.chat().create_with_stream(&req).await.unwrap();
-    while let Some(response) = stream.next().await {
-        for choice in response.unwrap().choices {
-            if let Some(content) = choice.delta.content {
-                count += 1;
-                let _ = tx
-                    .send(
-                        sse::Data::new(content)
-                            .event("chat_msg")
-                            .id(count.to_string()),
-                    )
-                    .await;
+
+    actix_web::rt::spawn(async move {
+        while let Some(response) = stream.next().await {
+            if let Ok(res) = response {
+                let id = res.id;
+
+                for choice in res.choices {
+                    if let Some(content) = choice.delta.content {
+                        count += 1;
+                        let _ = tx
+                            .send(
+                                sse::Data::new(
+                                    json! ({
+                                        "q": &params.q,
+                                        "a": content,
+                                        "id": id
+                                    })
+                                    .to_string(),
+                                )
+                                .event("chat/completions")
+                                .id(count.to_string()),
+                            )
+                            .await;
+                    }
+                }
             }
         }
-    }
+    });
 
-    rx.with_keep_alive(Duration::from_secs(1000000))
+    rx.with_keep_alive(Duration::from_secs(5))
+        .with_retry_duration(Duration::from_secs(5))
 }
 
 #[actix_web::main]
