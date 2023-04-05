@@ -23,11 +23,10 @@ fake = { version = "2.5", features = ['uuid', 'random_color'] }
 rand = "0.8"
 actix-multipart = "0.6.0"
 futures = "0.3.27"
-# rs_openai = "0.3.3"
 dotenvy = "0.15.7"
 tokio = "1.27.0"
 actix-web-lab = "0.19.1"
-rs_openai = {path = "../../../open-source/rs-openai/rs_openai"}
+rs_openai = "0.3.3"
 
 # cargo install cargo-watch
 # cargo watch -x run
