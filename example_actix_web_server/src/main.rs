@@ -51,7 +51,7 @@ struct Like {
 
 #[derive(Debug, Deserialize)]
 struct Params {
-    q: String,
+    question: String,
     user_id: String,
 }
 
@@ -172,7 +172,7 @@ async fn create_chat(req: HttpRequest) -> impl Responder {
         .model("gpt-3.5-turbo")
         .messages(vec![ChatCompletionMessageRequestBuilder::default()
             .role(Role::User)
-            .content(&params.q)
+            .content(&params.question)
             .build()
             .unwrap()])
         .stream(true)
@@ -189,14 +189,14 @@ async fn create_chat(req: HttpRequest) -> impl Responder {
                 let id = res.id;
 
                 for choice in res.choices {
-                    if let Some(content) = choice.delta.content {
+                    if let Some(answer) = choice.delta.content {
                         count += 1;
                         let _ = tx
                             .send(
                                 sse::Data::new(
                                     json! ({
-                                        "q": &params.q,
-                                        "a": content,
+                                        "question": &params.question,
+                                        "answer": answer,
                                         "id": id
                                     })
                                     .to_string(),
