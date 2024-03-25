@@ -104,8 +104,7 @@ pub fn full_example() {
         Rc::weak_count(&leaf),
     ); // leaf strong = 1, weak = 0
 
-
-    // 当内部作用域结束时, branch 离开作用域, Rc<Node> 的强引用计数减少为 0, 
+    // 当内部作用域结束时, branch 离开作用域, Rc<Node> 的强引用计数减少为 0,
     // 所以其 Node 被丢弃. 来自 leaf.parent 的弱引用计数 1 与 Node 是否被丢弃无关, 所以并没有产生任何内存泄漏!
     {
         let branch = Rc::new(Node {
@@ -129,12 +128,12 @@ pub fn full_example() {
         ); // leaf strong = 2, weak = 0
     }
 
-    // 如果在内部作用域结束后尝试访问 leaf 的父节点, 会再次得到 None. 在程序的结尾, 
+    // 如果在内部作用域结束后尝试访问 leaf 的父节点, 会再次得到 None. 在程序的结尾,
     // leaf 中 Rc<Node> 的强引用计数为 1, 弱引用计数为 0, 因为现在 leaf 又是 Rc<Node> 唯一的引用了.
     println!("leaf parent = {:?}", leaf.parent.borrow().upgrade()); // leaf parent = None
 
-    // 所有这些管理计数和值的逻辑都内建于 Rc<T> 和 Weak<T> 以及它们的 Drop trait 实现中. 
-    // 通过在 Node 定义中指定从子节点到父节点的关系为一个Weak<T>引用, 就能够拥有父节点和子节点之间的双向引用而不会造成引用循环和内存泄漏. 
+    // 所有这些管理计数和值的逻辑都内建于 Rc<T> 和 Weak<T> 以及它们的 Drop trait 实现中.
+    // 通过在 Node 定义中指定从子节点到父节点的关系为一个Weak<T>引用, 就能够拥有父节点和子节点之间的双向引用而不会造成引用循环和内存泄漏.
     println!(
         "leaf strong = {}, weak = {}",
         Rc::strong_count(&leaf),
